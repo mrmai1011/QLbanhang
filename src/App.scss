@@ -53,6 +53,49 @@
       font-size: 0.8rem;
     }
   }
+
+  .Login-Form {
+    max-width: 360px;
+    margin: 100px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-family: 'Segoe UI', sans-serif;
+    input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: rgb(180, 109, 2);
+    }
+    button {
+      padding: 12px;
+      background-color: rgb(180, 109, 2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: rgb(109, 66, 1);
+    }
+    p {
+      margin: 0;
+      font-size: 14px;
+      text-align: center;
+    }
+  }
+
   
   
   /* Thiết lập cho giao diện di động */
