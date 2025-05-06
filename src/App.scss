@@ -1,0 +1,141 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 430px;
+    height: 90px; /* Ví dụ: 10% của 932px = ~93px */
+    background-color: rgb(180, 109, 2);
+  
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    .h-logo{
+      width: 10vh;
+    }
+  }
+  .footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: antiquewhite;
+    font-size: 2rem;
+    padding: 20px;
+    width: 430px;
+    height: 90px; /* Ví dụ: 10% của 932px = ~93px */
+    background-color: rgb(180, 109, 2);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    i {
+      display: block;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+    }
+    h3 {
+      font-size: 0.8rem;
+    }
+  }
+  
+  
+  /* Thiết lập cho giao diện di động */
+  
+  
+  /* Đảm bảo giao diện mobile vẫn giữ trên các màn hình lớn (PC, tablet) */
+  html {
+    width: 375px; /* Kích thước của màn hình điện thoại di động chuẩn */
+    height: 667px; /* Chiều cao của màn hình điện thoại di động chuẩn */
+    overflow: hidden; /* Ngăn cuộn trang */
+   /*  border: solid 2px red; */
+    background-color: rgb(209, 209, 206);
+  }
+  
+  body {
+    width: 375px; /* Kích thước của màn hình điện thoại di động chuẩn */
+    height: 667px; /* Chiều cao của màn hình điện thoại di động chuẩn */
+  
+  }
+  #root{
+    width: 100%;
+    height: 100%;
+    margin: 0 auto; /* căn giữa trên màn hình PC nếu muốn */
+    position: relative; /* để dùng position tuyệt đối bên trong nếu cần */
+  }
+  @media (min-width: 360px) {
+  
+    html ,body {
+      width: 360px;
+      height: 740px;
+    }
+    .footer , .header{
+      width: 360px;
+    }
+  }
+  @media (min-width: 375px) {
+  
+    html,body {
+      width: 375px;
+      height: 667px;
+    }
+    .footer , .header{
+      width: 375px;
+    }
+  }
+  @media (min-width: 390px) {
+  
+    html,body {
+      width: 390px;
+      height: 844px;
+    }
+    .footer , .header{
+      width: 390px;
+    }
+  }
+  @media (min-width: 412px) {
+  
+    html,body {
+      width: 412px;
+      height: 915px;
+    }
+    .footer , .header{
+      width: 412px;
+    }
+  }
+  @media (min-width: 414px) {
+  
+    html,body {
+      width: 414px;
+      height: 896px;
+    }
+    .footer , .header{
+      width: 414px;
+    }
+  }
+  
+  @media (min-width: 430px) {
+  
+    html,body {
+      width: 430px;
+      height: 932px;
+    }
+    .footer , .header{
+      width: 430px;
+    }
+  }
