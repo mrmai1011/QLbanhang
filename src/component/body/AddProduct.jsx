@@ -1,15 +1,89 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import { IoArrowBack } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { TiDelete } from "react-icons/ti";
+
 export default function AddProduct({ onBack, exit }) {
     const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
+    
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const storeId = useSelector((state) => state.login.store_id);
     const role = useSelector((state) => state.login.role);
     
+    const [categories, setCategories] = useState([]);
+    const [categoryId, setCategoryId] = useState(null);
+    const [newCategory, setNewCategory] = useState("");
+
+    const [priceRaw, setPriceRaw] = useState(""); // Dạng hiển thị: "100.000"
+    const [price, setPrice] = useState(0);        // Dạng lưu thật: 100000 (number)
+
+    const formatNumber = (value) => {
+      return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const unformatNumber = (value) => {
+      return value.replace(/\./g, "");
+    };
+
+    const handlePriceChange = (e) => {
+      const input = e.target.value;
+      const numeric = unformatNumber(input);
+
+      if (!/^\d*$/.test(numeric)) return; // Chỉ chấp nhận số nguyên dương
+
+      setPriceRaw(formatNumber(numeric));
+      setPrice(parseInt(numeric || "0", 10));
+    };
+
+
+    useEffect(() => {
+      fetchCategories();
+    }, []);
+  
+    const fetchCategories = async () => {
+      const { data, error } = await supabase
+        .from("category")
+        .select("*")
+        .order("id", { ascending: true });
+  
+      if (!error) {
+        console.log("not error",data)
+        setCategories(data);
+        setCategoryId(data[0]?.id);
+      }
+    };
+   
+  
+    const handleAddCategory = async () => {
+      if (!newCategory.trim()) return;
+  
+      const { error } = await supabase.from("category").insert([{ name: newCategory }]);
+      if (!error) {
+        setNewCategory("");
+        fetchCategories();
+      }
+    };
+  
+    const handleDeleteCategory = async (id) => {
+      const firstId = categories[0]?.id;
+      if (id === firstId) return;
+  
+     /*  await supabase.from("category").delete().eq("id", id); */
+      // Bước 1: Chuyển toàn bộ sản phẩm về danh mục mặc định
+        await supabase
+        .from("products")
+        .update({ category: firstId })
+        .eq("category", id);
+
+      // Bước 2: Xóa danh mục
+      await supabase.from("category").delete().eq("id", id);
+     
+      fetchCategories();
+      
+       
+    };
 
     const handleAdd = async () => {
         if (role !== "admin") 
@@ -17,7 +91,7 @@ export default function AddProduct({ onBack, exit }) {
             alert("bạn không có quyền add");
             return
         }
-        if (!name || !price || !image) {
+        if (!name || !price ) {
           alert("Vui lòng nhập đầy đủ thông tin");
           return;
         }
@@ -40,7 +114,7 @@ export default function AddProduct({ onBack, exit }) {
     
           // Gửi vào Supabase
           const { error } = await supabase.from("products").insert([
-            { name: name, store_id: storeId, price: Number(price), imgUrl: imageUrl }
+            { name: name, store_id: storeId, price: price, category: categoryId, imgUrl: imageUrl }
           ]);
     
           if (error) {
@@ -62,7 +136,7 @@ export default function AddProduct({ onBack, exit }) {
   
     return (
         <div className={`add-product-form ${exit ? 'slide-out' : 'slide-in'}`}>
-      <button onClick={onBack} className="btn-back">
+      <button onClick={onBack} className="btn-back-product">
         <IoArrowBack size={24} /> Quay lại
       </button>
 
@@ -76,14 +150,47 @@ export default function AddProduct({ onBack, exit }) {
       <input
         type="number"
         placeholder="Giá"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        value={priceRaw}
+        onChange={handlePriceChange}
       />
+   
       <input
         type="file"
         accept="image/*"
         onChange={(e) => setImage(e.target.files[0])}
       />
+     <div className="category-select-row">
+        <label className="category-label">Danh mục:</label>
+        <select
+          value={categoryId || ""}
+          onChange={e => setCategoryId(parseInt(e.target.value))}
+          className="category-select"
+        >
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="category-manage">
+        <input
+          type="text"
+          placeholder="Thêm danh mục"
+          value={newCategory}
+          onChange={e => setNewCategory(e.target.value)}
+        />
+        <button onClick={handleAddCategory}>+ Thêm danh mục</button>
+      </div>
+      <ul className="category-list">
+        {categories.map((cat, index) => (
+          <li key={cat.id}>
+            {cat.name}
+            {index !== 0 && (
+              <button onClick={() => handleDeleteCategory(cat.id)}><i><TiDelete/></i></button>
+            )}
+          </li>
+        ))}
+      </ul>
+
       <button className="btn-add" onClick={handleAdd} disabled={loading}>
         {loading ? "Đang thêm..." : "Thêm"}
       </button>

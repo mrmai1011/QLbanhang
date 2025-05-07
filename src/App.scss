@@ -91,6 +91,30 @@
       input:focus {
         border-color: rgb(180, 109, 2);
       }
+
+      .b-donhang-timkiem {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      
+      .b-donhang-timkiem input,
+      .b-donhang-timkiem select {
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      
+      .b-donhang-timkiem input {
+        flex: 1;
+      }
+      
+      .b-donhang-timkiem select {
+        width: 150px;
+      }
+
       .b-donhang-wapper{
         display: flex;
         flex-wrap: wrap;
@@ -169,7 +193,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: white;
+    background: rgb(243, 242, 242);
     padding: 20px;
     box-sizing: border-box;
     z-index: 1000;
@@ -177,6 +201,102 @@
     flex-direction: column;
 
   }
+  .category-select-row {
+    display: flex;
+    align-items: center;
+  
+/*    background-color: red; */
+  
+    
+  }
+  
+  .category-label {
+    font-weight: bold;
+    width: 80px; /* Cố định độ rộng bên trái */
+    
+  }
+  .category-select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+/*   select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  } */
+  
+  
+  .category-manage {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .category-manage input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .category-manage button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 1px 1px 0px 0px #333;
+    height: 43px;
+  }
+  
+  .category-manage button:hover {
+    background-color: #0056b3;
+    box-shadow: 1px 1px 0px 0px #333;
+  }
+  
+  .category-list {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px 0;
+    white-space: nowrap;
+    scrollbar-width: thin; /* Firefox */
+  }
+  
+  .category-list li {
+    position: relative;
+    flex: 0 0 auto; /* Giữ mỗi item có chiều rộng riêng, không co lại */
+    background-color: #ece4e4;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    box-shadow: 1px 1px 0px 0px #333;
+    gap: 6px;
+  }
+  
+  .category-list li button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: red;
+    font-size: 1.5rem;
+  
+  
+    
+  }
+  
   
   .slide-in {
     animation: slideIn 0.1s forwards;
@@ -196,16 +316,22 @@
   }
 
   
-  .btn-back {
-    background: none;
+  .btn-back-product {
+    background: rgb(97, 96, 96);
     border: none;
-    color: #333;
+
     font-size: 1rem;
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 20px;
     cursor: pointer;
+    justify-content: center;
+    color: white;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 30%;
+    
   
   }
   
@@ -228,6 +354,7 @@
   .add-product-form input:focus {
     border-color: rgb(180, 109, 2);
   }
+
   .btn-add {
     background-color: rgb(180, 109, 2);
     color: white;
@@ -277,17 +404,16 @@
   }
 
   .item-controls {
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     margin-top: 8px;
-  }
-  .item-controls{
-    position: fixed;
     background-color: #f7f4f4;
     border-radius: 5px;
   }
+
   .item-controls button {
     width: 28px;
     height: 28px;
@@ -299,10 +425,12 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
+    box-shadow: 1px 1px 0px 0px #333;
   }
   
   .item-controls button:hover {
     background-color: rgb(43, 109, 2);
+    box-shadow: 1px 1px 0px 0px #333;
   }
   
   .item-controls span {
@@ -447,9 +575,11 @@
       font-size: 16px;
       cursor: pointer;
       transition: background-color 0.2s;
+      box-shadow: 1px 1px 0px 0px #333;
     }
     button:hover {
       background-color: rgb(109, 66, 1);
+      box-shadow: 1px 1px 0px 0px #333;
     }
     p {
       margin: 0;

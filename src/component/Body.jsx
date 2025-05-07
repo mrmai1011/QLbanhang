@@ -28,24 +28,54 @@ export default function Body()
     const items = useSelector((state) => state.order.items);
     const totalItem = useSelector(selectTotalItem);
     const total = useSelector(selectTotalPrice);
+
+    const [categories, setCategories] = useState([]);
+    const [categoryId, setCategoryId] = useState(null);
+
+    const [selectedCategoryId, setSelectedCategoryId] = useState('1'); // "" là Tất cả danh mục
+ 
+
+    useEffect(() => {
+      fetchCategories();
+    }, []);
+  
+    const fetchCategories = async () => {
+      const { data, error } = await supabase
+        .from("category")
+        .select("*")
+        .order("id", { ascending: true });
+  
+      if (!error) {
+        console.log("not error",data)
+        setCategories(data);
+        setCategoryId(data[0]?.id);
+      }
+    };
     useEffect(() => {
         const fetchProducts = async () => {
           const { data, error } = await supabase
             .from("products")
-            .select("id,name, price, imgUrl") // chỉ chọn cột cần dùng
+            .select("id,name, price, imgUrl, category") // chỉ chọn cột cần dùng
             .eq("store_id", storeId);
     
           if (error) {
             console.error("Lỗi khi fetch orders:", error);
           } else {
-            setProducts(data);
+            const filtered =
+              selectedCategoryId === '1'
+              ? data // Nếu là "1" → lấy hết
+              : data.filter(item => String(item.category) === String(selectedCategoryId));
+            setProducts(filtered);
           }
         };
     
         if (currentPage === "pageDonHang") {
             fetchProducts();
         }
-      }, [storeId, currentPage]);
+      }, [storeId, currentPage,selectedCategoryId]);
+
+ 
+
     const handleBack = () => {
         setExitAnimation(true); // kích hoạt animation rút ra
         setTimeout(() => {
@@ -89,6 +119,15 @@ export default function Body()
           <div className="b-donhang">
             <div className="b-donhang-timkiem">
                 <input placeholder="Tìm theo tên"></input>
+                <select 
+                    value={selectedCategoryId}
+                    onChange={(e) => setSelectedCategoryId(e.target.value)}
+                >
+                 
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+              </select>
             </div>
             <div className="b-donhang-wapper">
               
@@ -98,7 +137,8 @@ export default function Body()
                 </div>
                 {products.map((order, index) => {
                   const existingItem = items.find(item => item.id === order.id);
-
+                  
+                    
                   return (
                     <div
                       key={index}
@@ -109,7 +149,7 @@ export default function Body()
                       <h3>{order.name}</h3>
                       <h3>{Number(order.price).toLocaleString("vi-VN")}</h3>
 
-                      {existingItem && existingItem.quantity > 0 && (
+                      {existingItem && existingItem.quantity > 0 &&(
                         <div className="item-controls">
                           <button
                             onClick={(e) => {
@@ -142,7 +182,7 @@ export default function Body()
                  onClick={() => dispatch(setPageAddProduct())}
                 >
                     <i><IoMdAdd/></i>
-                    <h3>Thêm sản phẩm</h3>
+                    <h3>Thêm sp</h3>
                 </div>
 
 
