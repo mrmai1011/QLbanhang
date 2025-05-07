@@ -5,15 +5,17 @@ import { FaChartLine } from "react-icons/fa";
 import { LuArrowRightLeft} from "react-icons/lu";
 
 import { AiFillThunderbolt } from "react-icons/ai";
+import { BsBagFill } from "react-icons/bs";
 import { IoMdAdd } from "react-icons/io";
 import logo from "../assets/logo.png"
 
 import AddProduct from "./body/addProduct";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { setPageAddProduct , setPageDonHang } from "../redux/slice/pageSlice";
+import { setPageAddProduct , setPageDonHang,setPageThanhToan } from "../redux/slice/pageSlice";
 import { useDispatch , useSelector} from "react-redux";
-import { addToOrder } from "../redux/slice/orderSlice";
+import { addToOrder,decreaseItem,selectTotalItem,selectTotalPrice } from "../redux/slice/orderSlice";
+import PageThanhToan from "./body/PageThanhToan";
 
 export default function Body()
 {
@@ -24,12 +26,13 @@ export default function Body()
     const [products, setProducts] = useState([]);
    
     const items = useSelector((state) => state.order.items);
-    const total = items.reduce((sum, item) => sum + Number(item.price), 0);
+    const totalItem = useSelector(selectTotalItem);
+    const total = useSelector(selectTotalPrice);
     useEffect(() => {
         const fetchProducts = async () => {
           const { data, error } = await supabase
             .from("products")
-            .select("name, price, imgUrl") // chỉ chọn cột cần dùng
+            .select("id,name, price, imgUrl") // chỉ chọn cột cần dùng
             .eq("store_id", storeId);
     
           if (error) {
@@ -50,6 +53,11 @@ export default function Body()
           setExitAnimation(false);
         }, 200); // khớp với thời gian animation
       };
+
+      const handleAddOder = (order) =>{
+        dispatch(addToOrder(order))
+        console.log(items)
+      }
     
    
     return(
@@ -88,15 +96,48 @@ export default function Body()
                     <i><AiFillThunderbolt/></i>
                     <h3>Bán nhanh</h3>
                 </div>
-                {products.map((order, index) => (
-                <div key={index} className="b-donhang-item"
-                    onClick={() => dispatch(addToOrder(order))} // trong map order
-                >
-                    <img src={order.imgUrl} onError={(e) => e.target.src = logo} />
-                    <h3>{order.name}</h3>
-                    <h3>{Number(order.price).toLocaleString("vi-VN")}</h3>
-                </div>
-                ))}
+                {products.map((order, index) => {
+                  const existingItem = items.find(item => item.id === order.id);
+
+                  return (
+                    <div
+                      key={index}
+                      className="b-donhang-item"
+                      onClick={()=>handleAddOder(order)}
+                    >
+                      <img src={order.imgUrl} onError={(e) => (e.target.src = logo)} />
+                      <h3>{order.name}</h3>
+                      <h3>{Number(order.price).toLocaleString("vi-VN")}</h3>
+
+                      {existingItem && existingItem.quantity > 0 && (
+                        <div className="item-controls">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              dispatch(decreaseItem(order));
+                            }}
+                          >
+                            -
+                          </button>
+
+                          <span>{existingItem.quantity}</span>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              dispatch(addToOrder(order));
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                
+
+             
                 <div className="b-donhang-them"
                  onClick={() => dispatch(setPageAddProduct())}
                 >
@@ -104,7 +145,7 @@ export default function Body()
                     <h3>Thêm sản phẩm</h3>
                 </div>
 
-      
+
             </div>
           </div>
          }
@@ -116,11 +157,23 @@ export default function Body()
             </div>
           )}
          {total > 0 && currentPage === "pageDonHang" && (
-            <button className="btn-thanhtoan"  onClick={() => dispatch(setPageThanhToan())} >
-                Thanh toán ({total.toLocaleString("vi-VN")}đ)
+              <button className="btn-thanhtoan" onClick={() => dispatch(setPageThanhToan())}>
+              <div className="btn-left">
+               <i><BsBagFill/></i> <span>{totalItem}</span>
+              </div>
+              <div className="btn-center">
+                {total.toLocaleString("vi-VN")}đ
+              </div>
+              <div className="btn-right">
+                Tiếp tục
+              </div>
             </button>
             )}
-
+          {/*   page thanh toán */ }
+          {currentPage === "pageThanhToan" && <PageThanhToan />}
         </div>
+
+     
+
     );
 }
