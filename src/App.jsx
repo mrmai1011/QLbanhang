@@ -12,8 +12,8 @@ function App() {
     <>
       <Header/>
       <LoginForm/>
-      <Body/>
-     {isLogin && <Footer/> } 
+      {isLogin && <Body/>}
+      {isLogin && <Footer/> } 
     </>
   )
 }

@@ -39,42 +39,228 @@
     display: flex;
     flex-wrap: wrap;
     gap: 16px; /* khoảng cách giữa các item */
-   }
-   .b-quanly-item {
-      display: flex;
-      flex-direction: column;
-      width: 121px;
-      height: 100px;
-      background-color: rgba(243, 242, 241, 0.954);
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-    i{
-      font-size: 2rem;
+      .b-quanly-item {
+        display: flex;
+        flex-direction: column;
+        width: 121px;
+        height: 100px;
+        background-color: rgba(243, 242, 241, 0.954);
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+      i{
+        font-size: 2rem;
+      }
+      .color-red{
+      
+        color: red;
+      }
+      .color-orange{
+      
+        color: rgb(255, 136, 0);
+      }
+      .color-green{
+      
+        color: rgb(50, 137, 3);
+      }
+      .color-puble{
+      
+        color: rgb(130, 14, 168);
+      }
+      h3{
+        font-size: 1rem;
+        color: #585757;
+      }
+    
     }
-    .color-red{
-     
-      color: red;
-    }
-    .color-orange{
-     
-      color: rgb(255, 136, 0);
-    }
-    .color-green{
-     
-      color: rgb(50, 137, 3);
-    }
-    .color-puble{
-     
-      color: rgb(130, 14, 168);
-    }
-    h3{
-      font-size: 1rem;
-    }
-   
    }
   
+   .b-donhang{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      input {
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.2s;
+        width: 100%;
+      }
+      input:focus {
+        border-color: rgb(180, 109, 2);
+      }
+      .b-donhang-wapper{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px; 
+        align-items: flex-start;
+        height: 200px;
+        
+     
+        margin-top: 10px;
+        .b-donhang-bannhanh ,.b-donhang-them,.b-donhang-item {
+          display: flex;
+          flex-direction: column;
+          width: 121px;
+          min-height: 100px; /* dùng min-height thay vì height */
+          background-color: rgba(243, 242, 241, 0.954);
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          border-radius: 10px;
+          
+        }
+        .b-donhang-bannhanh i{
+          font-size: 2rem;
+          color: rgb(0, 132, 255);
+        }
+        .b-donhang-bannhanh h3{
+          font-size: 1rem;
+          color: rgb(0, 132, 255);
+        }
+        .b-donhang-them i{
+          font-size: 2rem;
+          color: rgb(66, 153, 8);
+        }
+        .b-donhang-them h3{
+          font-size: 0.8rem;
+          color: rgb(66, 153, 8);
+        }
+       
+        .b-donhang-item img{
+          width: 100px;            /* chiếm toàn bộ chiều ngang */
+          height: 60px;           /* chiếm 50% chiều cao */
+          object-fit: cover;         /* ảnh fill khung và crop nếu cần */
+          border-radius: 10px;  /* nếu muốn bo góc */
+        }
+        .b-donhang-item h3{
+          padding-left: 10px;
+          margin: 0;
+          font-size: 0.9rem;
+          text-align: center;
+          white-space: nowrap;        /* Không xuống dòng */
+          overflow: hidden;           /* Ẩn phần vượt quá */
+          text-overflow: ellipsis;    /* Hiện dấu "..." */
+          width: 100%;
+          color: #585757;
+        }
+        
+      }
+      
+   }
+   .add-product-overlay {
+    position: absolute;     /* hoặc fixed nếu muốn che toàn màn hình */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;      /* hoặc rgba(0,0,0,0.05) nếu muốn mờ */
+    z-index: 999;
+    padding: 16px;
+    border-radius: 10px;
+   
+    
   }
+  .add-product-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+
+  }
+  
+  .slide-in {
+    animation: slideIn 0.1s forwards;
+  }
+  .slide-out {
+    animation: slideOut 0.1s forwards;
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+  }
+  
+  @keyframes slideOut {
+    from { transform: translateX(0); }
+    to   { transform: translateX(100%); }
+  }
+
+  
+  .btn-back {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  
+  }
+  
+  .add-product-form h2 {
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .add-product-form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .add-product-form input:focus {
+    border-color: rgb(180, 109, 2);
+  }
+  .btn-add {
+    background-color: rgb(180, 109, 2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+    margin-top: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-add:hover {
+    background-color: rgb(150, 90, 0);
+  }
+  .btn-thanhtoan {
+    position: fixed;
+    bottom: 120px;
+    right: 0;
+    left: 0;
+    width: 430px;
+    background: rgb(3, 152, 45);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    
+  }
+  
+}
 
 
   .footer{
@@ -187,10 +373,27 @@
     }
     .body {
       height: 560px;
+      .b-quanly .b-quanly-item{
+        width: 100px;
+      }
+      .b-donhang {
+        height: 525px;
+        .b-donhang-wapper .b-donhang-bannhanh{
+          width: 98px;
+        }
+        .b-donhang-wapper .b-donhang-item{
+          width: 98px;
+        }
+        .b-donhang-wapper .b-donhang-them{
+          width: 98px;
+        }
+      }
+      .btn-thanhtoan{
+        width: 360px;
+      }
+     
     }
-    .b-quanly-item{
-      width: 100px;
-    }
+  
   }
   @media (min-width: 375px) {
   
@@ -203,6 +406,24 @@
     }
     .body {
       height: 487px;
+      .b-quanly .b-quanly-item{
+        width: 103px;
+      }
+      .b-donhang {
+        height: 455px;
+        .b-donhang-wapper .b-donhang-bannhanh{
+          width: 103px;
+        }
+        .b-donhang-wapper .b-donhang-item{
+          width: 103px;
+        }
+        .b-donhang-wapper .b-donhang-them{
+          width: 103px;
+        }
+      }
+      .btn-thanhtoan{
+        width: 375px;
+      }
     }
     
   }
@@ -217,6 +438,24 @@
     }
     .body {
       height: 664px;
+      .b-quanly .b-quanly-item{
+        width: 108px;
+      }
+      .b-donhang {
+        height: 640px;
+        .b-donhang-wapper .b-donhang-bannhanh{
+          width: 108px;
+        }
+        .b-donhang-wapper .b-donhang-item{
+          width: 108px;
+        }
+        .b-donhang-wapper .b-donhang-them{
+          width: 108px;
+        }
+      }
+      .btn-thanhtoan{
+        width: 390px;
+      }
     }
   
   }
@@ -231,6 +470,25 @@
     }
     .body {
       height: 735px;
+      .b-quanly .b-quanly-item{
+        width: 115px;
+      }
+      .b-donhang {
+        height: 700px;
+        .b-donhang-wapper .b-donhang-bannhanh{
+          width: 115px;
+        }
+        .b-donhang-wapper .b-donhang-item{
+          width: 115px;
+        }
+        .b-donhang-wapper .b-donhang-them{
+          width: 115px;
+        }
+      }
+      .btn-thanhtoan{
+        width: 412px;
+      }
+     
     }
   
   }
@@ -245,6 +503,25 @@
     }
     .body {
       height: 716px;
+      .b-quanly .b-quanly-item{
+        width: 116px;
+      }
+      .b-donhang{
+        height: 680px;
+        .b-donhang-wapper .b-donhang-bannhanh{
+          width: 116px;
+        }
+        .b-donhang-wapper .b-donhang-item{
+          width: 116px;
+        }
+        .b-donhang-wapper .b-donhang-them{
+          width: 116px;
+        }
+      }
+      
+      .btn-thanhtoan{
+        width: 414px;
+      }
     }
    
   }
@@ -260,6 +537,27 @@
     }
     .body {
       height: 752px;
+      .b-quanly .b-quanly-item{
+        width: 121px;
+      }
+      .b-donhang {
+        height: 720px;
+    
+        .b-donhang-wapper .b-donhang-bannhanh{
+          width: 121px;
+        }
+        .b-donhang-wapper .b-donhang-item{
+          width: 121px;
+        }
+        .b-donhang-wapper .b-donhang-them{
+          width: 121px;
+        }
+  
+      }
+      .btn-thanhtoan{
+        width: 430px;
+      }
+      
     }
   
   }

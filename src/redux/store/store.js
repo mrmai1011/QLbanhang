@@ -1,6 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginReducer from "../slice/loginSlice";
 import pageReducer from "../slice/pageSlice";
+import orderReducer from "../slice/orderSlice"
+
 
 // Load từ localStorage nếu có
 const savedAuth = localStorage.getItem("auth");
@@ -20,6 +22,7 @@ export const store = configureStore({
   reducer: {
    login: loginReducer,
    page: pageReducer, // 👈 page select
+   order:orderReducer
   },
   preloadedState: {
     login: initialLoginState, // 👈 Đẩy vào slice login
