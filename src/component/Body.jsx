@@ -16,6 +16,7 @@ import { setPageAddProduct , setPageDonHang,setPageThanhToan } from "../redux/sl
 import { useDispatch , useSelector} from "react-redux";
 import { addToOrder,decreaseItem,selectTotalItem,selectTotalPrice } from "../redux/slice/orderSlice";
 import PageThanhToan from "./body/PageThanhToan";
+import PageThuChi from "./body/PageThuChi";
 
 export default function Body()
 {
@@ -211,6 +212,7 @@ export default function Body()
             )}
           {/*   page thanh toán */ }
           {currentPage === "pageThanhToan" && <PageThanhToan />}
+          {currentPage === "pageThuChi" && <PageThuChi />}
         </div>
 
      

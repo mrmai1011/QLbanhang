@@ -148,7 +148,7 @@ export default function AddProduct({ onBack, exit }) {
         onChange={(e) => setName(e.target.value)}
       />
       <input
-        type="number"
+        type="text"
         placeholder="Giá"
         value={priceRaw}
         onChange={handlePriceChange}
