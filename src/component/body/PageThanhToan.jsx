@@ -8,39 +8,25 @@ import { useState } from "react";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdAttachMoney } from "react-icons/md";
 import { supabase } from "../../supabaseClient";
-import { nanoid } from "nanoid";
+
+import { useFormattedAmount } from "../../utils/useFormattedAmount";
+
 export default function PageThanhToan() {
   const items = useSelector(selectOrderItems);
   const total = useSelector(selectTotalPrice);
   const dispatch = useDispatch();
  const [exitAnimation, setExitAnimation] = useState(false);
  const storeId = useSelector((state) => state.login.store_id);
- const [priceRaw, setPriceRaw] = useState(""); // Dạng hiển thị: "100.000"
- /* const [price, setPrice] = useState(0);   */
 
- const [prepaid, setPrepaid] = useState(0);
   const [note, setNote] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("tiền mặt");
   const [guest, setQuest] = useState("tới mua");
-  const formatNumber = (num) => Number(num).toLocaleString("vi-VN");
+  const { amount, amountRaw, handleAmountChange } = useFormattedAmount(total);
 
-  const unformatNumber = (str) => str.replace(/\D/g, "");
 
-const handlePriceChange = (e) => {
-  let input = e.target.value;
-  let numeric = unformatNumber(input); // bỏ dấu . nếu có
 
-  if (!/^\d*$/.test(numeric)) return; // chỉ nhận số nguyên dương
 
-  let value = parseInt(numeric || "0", 10);
 
-  if (value > total) value = total;
-    
- 
-
-  setPriceRaw(formatNumber(value)); // hiển thị đã format
-  setPrepaid(value); // lưu giá trị số thực
-};
 
   const handleBack = () => {
     setExitAnimation(true); // kích hoạt animation rút ra
@@ -53,8 +39,8 @@ const handlePriceChange = (e) => {
   };
 
   const handleThanhToan = async () => {
-    console.log("prepaid", prepaid)
-    const actualPrepaid = prepaid === 0 || prepaid == null ? total : prepaid;
+    console.log("prepaid", amount)
+    const actualPrepaid = amount === 0 || amount == null ? total : amount;
     const debt = total - actualPrepaid;
     const donHang = {
      
@@ -68,10 +54,20 @@ const handlePriceChange = (e) => {
       payment_method:paymentMethod,
       created_at: new Date().toISOString()
     };
+    const income = {
+      id_store:storeId,
+      amount: actualPrepaid,
+      payment_method : paymentMethod,
+      created_at: new Date().toISOString(),
+      source : "thu",
+      guest,
+
+    }
   
     const { error } = await supabase.from("orders").insert([donHang]); // hoặc gọi API bạn dùng
+    const { error1 } = await supabase.from("income").insert([income]); // hoặc gọi API bạn dùng
   
-    if (error) {
+    if (error || error1) {
       console.error("Lỗi khi lưu đơn hàng:", error);
       alert("Đã xảy ra lỗi khi lưu đơn hàng.");
     } else {
@@ -134,7 +130,7 @@ const handlePriceChange = (e) => {
             onChange={(e) => setPaymentMethod(e.target.value)}
             >
               <option value="tiền mặt">Tiền mặt</option>
-              <option value="ngân hàng">Chuyển khoản</option>
+              <option value="chuyển khoản">Chuyển khoản</option>
             </select>
           </div>
 
@@ -143,8 +139,8 @@ const handlePriceChange = (e) => {
             <input
               type="text"
               className="prepaid-input"
-              value={priceRaw}
-              onChange={handlePriceChange}
+              value={amountRaw}
+              onChange={handleAmountChange}
               placeholder="Nhập số tiền đã đưa trước"
             />
           </div>

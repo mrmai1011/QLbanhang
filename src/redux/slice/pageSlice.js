@@ -26,7 +26,11 @@ const pageSlice = createSlice({
     },
     setPageThanhToan: (state) => {
       state.currentPage = "pageThanhToan";
+    },
+    setPageKhoanThu: (state) => {
+      state.currentPage = "pageKhoanThu";
     }
+
   },
 });
 
@@ -37,7 +41,8 @@ export const {
   setPageSoNo,
   setPageThem,
   setPageAddProduct,
-  setPageThanhToan
+  setPageThanhToan,
+  setPageKhoanThu
 } = pageSlice.actions;
 
 export default pageSlice.reducer;

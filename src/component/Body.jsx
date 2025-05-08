@@ -17,6 +17,7 @@ import { useDispatch , useSelector} from "react-redux";
 import { addToOrder,decreaseItem,selectTotalItem,selectTotalPrice } from "../redux/slice/orderSlice";
 import PageThanhToan from "./body/PageThanhToan";
 import PageThuChi from "./body/PageThuChi";
+import TaoKhoanThu from "./body/PageKhoanThu";
 
 export default function Body()
 {
@@ -213,6 +214,7 @@ export default function Body()
           {/*   page thanh toán */ }
           {currentPage === "pageThanhToan" && <PageThanhToan />}
           {currentPage === "pageThuChi" && <PageThuChi />}
+          {currentPage === "pageKhoanThu" && <TaoKhoanThu />}
         </div>
 
      

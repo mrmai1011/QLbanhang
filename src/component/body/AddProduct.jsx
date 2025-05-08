@@ -3,6 +3,7 @@ import { supabase } from "../../supabaseClient";
 import { IoArrowBack } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { TiDelete } from "react-icons/ti";
+import { useFormattedAmount } from "../../utils/useFormattedAmount";
 
 export default function AddProduct({ onBack, exit }) {
     const [name, setName] = useState("");
@@ -16,8 +17,9 @@ export default function AddProduct({ onBack, exit }) {
     const [categoryId, setCategoryId] = useState(null);
     const [newCategory, setNewCategory] = useState("");
 
-    const [priceRaw, setPriceRaw] = useState(""); // Dạng hiển thị: "100.000"
-    const [price, setPrice] = useState(0);        // Dạng lưu thật: 100000 (number)
+ 
+    const { amount, amountRaw, handleAmountChange } = useFormattedAmount();
+
 
     const formatNumber = (value) => {
       return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -91,7 +93,7 @@ export default function AddProduct({ onBack, exit }) {
             alert("bạn không có quyền add");
             return
         }
-        if (!name || !price ) {
+        if (!name || !amount ) {
           alert("Vui lòng nhập đầy đủ thông tin");
           return;
         }
@@ -114,7 +116,7 @@ export default function AddProduct({ onBack, exit }) {
     
           // Gửi vào Supabase
           const { error } = await supabase.from("products").insert([
-            { name: name, store_id: storeId, price: price, category: categoryId, imgUrl: imageUrl }
+            { name: name, store_id: storeId, price: amount, category: categoryId, imgUrl: imageUrl }
           ]);
     
           if (error) {
@@ -150,8 +152,8 @@ export default function AddProduct({ onBack, exit }) {
       <input
         type="text"
         placeholder="Giá"
-        value={priceRaw}
-        onChange={handlePriceChange}
+        value={amountRaw}
+        onChange={handleAmountChange }
       />
    
       <input

@@ -27,7 +27,7 @@ export default function Footer(){
 
       <i onClick={() => dispatch(setPageDonHang())} style={{ color: currentPage === "pageDonHang" ? activeColor : defaultColor }}>
         <LuNotepadText />
-        <h3>Đơn hàng</h3>
+        <h3>Bán hàng</h3>
       </i>
 
       <i onClick={() => dispatch(setPageThuChi())} style={{ color: currentPage === "pageThuChi" ? activeColor : defaultColor }}>
