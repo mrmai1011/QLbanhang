@@ -56,6 +56,10 @@
       
         color: red;
       }
+      .color-blue{
+      
+        color: rgb(9, 202, 198);
+      }
       .color-orange{
       
         color: rgb(255, 136, 0);
@@ -728,6 +732,8 @@
             
           }
           .item-thuchi-des{
+            display: flex;
+            justify-content: space-between;
             padding-left: 5px;
             padding-right: 5px;
             text-align: start;
@@ -765,6 +771,7 @@
     text-align: center;
     margin-bottom: 20px;
     color: #333;
+   
   }
   
   .form-group label {

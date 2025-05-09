@@ -3,6 +3,7 @@ import { FaStore,FaBook } from "react-icons/fa";
 import { LuNotepadText ,LuArrowRightLeft} from "react-icons/lu";
 import { BsThreeDots } from "react-icons/bs";
 import { useDispatch , useSelector} from "react-redux";
+import { MdSell } from "react-icons/md";
 import {
     setPageQuanLi,
     setPageDonHang,
@@ -26,7 +27,7 @@ export default function Footer(){
       </i>
 
       <i onClick={() => dispatch(setPageDonHang())} style={{ color: currentPage === "pageDonHang" ? activeColor : defaultColor }}>
-        <LuNotepadText />
+        <MdSell />
         <h3>Bán hàng</h3>
       </i>
 

@@ -3,7 +3,7 @@ import ItemThuChi from "./itemThuChi";
 import { supabase } from "../../supabaseClient";
 import { useSelector , useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { setPageKhoanThu } from "../../redux/slice/pageSlice";
+import { setPageKhoanThu ,setPageKhoanChi} from "../../redux/slice/pageSlice";
 
 export default function PageThuChi() {
   const storeId = useSelector((state) => state.login.store_id);
@@ -18,7 +18,9 @@ export default function PageThuChi() {
   const [selectedPayment, setSelectedPayment] = useState("all");
   const [selectedTransaction, setSelectedTransaction] = useState("all");
   const [type, setType] = useState("Hôm nay");
-
+  const handleOpenTaoChi =  () =>{
+    dispatch(setPageKhoanChi())
+}
   const handleOpenTaoThu =  () =>{
         dispatch(setPageKhoanThu())
   }
@@ -47,84 +49,95 @@ export default function PageThuChi() {
   }, [storeId]);
 
   useEffect(() => {
-    let { data: filtered, total, thu, chi, newType } = filterDataByTimeRange(allData, selectedDay);
-    console.log("pay ",selectedPayment)
-    if (selectedPayment !== "all") {
-      filtered = filtered.filter((item) => item.payment_method === selectedPayment);
-    }
+    // Tính số dư và tổng thu/chi chỉ dựa vào selectedDay
+    const { data: dayFilteredData, thu, chi, newType } = filterDataByTimeRange(allData, selectedDay);
 
-    if (selectedTransaction !== "all") {
-      filtered = filtered.filter((item) => item.source === selectedTransaction);
-    }
-
-    setFilteredOrders(filtered);
-    setFilteredTotal(filtered.reduce((sum, o) => sum + o.amount, 0));
+    setFilteredTotal(dayFilteredData.reduce((sum, o) => sum + o.amount, 0));
     setFilteredThu(thu);
     setFilteredChi(chi);
     setType(newType);
-  }, [allData, selectedDay, selectedPayment, selectedTransaction]);
 
-  function filterDataByTimeRange(data, type) {
+    // Tiếp tục filter thêm cho List Today (Payment & Transaction)
+    let finalList = dayFilteredData;
+
+    if (selectedPayment !== "all") {
+        finalList = finalList.filter((item) => item.payment_method === selectedPayment);
+    }
+
+    if (selectedTransaction !== "all") {
+        finalList = finalList.filter((item) => item.source === selectedTransaction);
+    }
+
+    setFilteredOrders(finalList);
+}, [allData, selectedDay, selectedPayment, selectedTransaction]);
+
+  function filterDataByTimeRange(data, type, payment = null, transaction = null) {
     const now = new Date();
     let startDate = null;
     let endDate = null;
-    let newType = "Tất cả"
+    let newType = "Tất cả";
 
     switch (type) {
-      case "today":
-        startDate = new Date(now);
-        startDate.setHours(0, 0, 0, 0);
-        endDate = new Date(now);
-        endDate.setHours(23, 59, 59, 999);
-        newType = "Hôm nay"
-        break;
-      case "yesterday":
-        startDate = new Date(now);
-        startDate.setDate(now.getDate() - 1);
-        startDate.setHours(0, 0, 0, 0);
-        endDate = new Date(now);
-        endDate.setDate(now.getDate() - 1);
-        endDate.setHours(23, 59, 59, 999);
-        newType = "Hôm qua"
-        break;
-      case "thismonth":
-        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-        newType = "Tháng này"
-        break;
-      case "lastmonth":
-        startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        endDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
-         newType = "Tháng trước"
-        break;
-      case "thisyear":
-        startDate = new Date(now.getFullYear(), 0, 1);
-        endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
-        newType = "Năm này"
-        break;
-      case "all":
-        return {
-          data,
-          total: data.reduce((sum, o) => sum + o.amount, 0),
-          thu: data.filter((o) => o.source === "thu").reduce((sum, o) => sum + o.amount, 0),
-          chi: data.filter((o) => o.source === "chi").reduce((sum, o) => sum + o.amount, 0),
-          newType: "Tất cả"
-        };
-      default:
-        return { data: [], total: 0, thu: 0, chi: 0, type: "Tất cả" };
+        case "today":
+            startDate = new Date(now);
+            startDate.setHours(0, 0, 0, 0);
+            endDate = new Date(now);
+            endDate.setHours(23, 59, 59, 999);
+            newType = "Hôm nay";
+            break;
+        case "yesterday":
+            startDate = new Date(now);
+            startDate.setDate(now.getDate() - 1);
+            startDate.setHours(0, 0, 0, 0);
+            endDate = new Date(now);
+            endDate.setDate(now.getDate() - 1);
+            endDate.setHours(23, 59, 59, 999);
+            newType = "Hôm qua";
+            break;
+        case "thismonth":
+            startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+            endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+            newType = "Tháng này";
+            break;
+        case "lastmonth":
+            startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            endDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+            newType = "Tháng trước";
+            break;
+        case "thisyear":
+            startDate = new Date(now.getFullYear(), 0, 1);
+            endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+            newType = "Năm này";
+            break;
+        case "all":
+            return applyAdditionalFilters(data, payment, transaction, "Tất cả");
+        default:
+            return { data: [], total: 0, thu: 0, chi: 0, newType: "Tất cả" };
     }
 
-    const filtered = data.filter((item) => {
-      const date = new Date(item.created_at);
-      return date >= startDate && date <= endDate;
+    const filtered = data.filter((o) => {
+        const createdAt = new Date(o.created_at);
+        return createdAt >= startDate && createdAt <= endDate;
     });
 
-    const total = filtered.reduce((sum, o) => sum + o.amount, 0);
-    const thu = filtered.filter((o) => o.source === "thu").reduce((sum, o) => sum + o.amount, 0);
-    const chi = filtered.filter((o) => o.source === "chi").reduce((sum, o) => sum + o.amount, 0);
+    return applyAdditionalFilters(filtered, payment, transaction, newType);
+}
 
-    return { data: filtered, total, thu, chi, newType };
-  }
+function applyAdditionalFilters(data, payment, transaction, newType) {
+  const finalData = data.filter((o) => {
+      const paymentMatch = payment === "all" || !payment ? true : o.payment_method === payment;
+      const transactionMatch = transaction === "all" || !transaction ? true : o.source === transaction;
+      return paymentMatch && transactionMatch;
+  });
+
+  return {
+      data: finalData,
+      total: finalData.reduce((sum, o) => sum + o.amount, 0),
+      thu: finalData.filter((o) => o.source === "thu").reduce((sum, o) => sum + o.amount, 0),
+      chi: finalData.filter((o) => o.source === "chi").reduce((sum, o) => sum + o.amount, 0),
+      newType
+  };
+}
 
   return (
     <div className="page-thuchi">
@@ -152,25 +165,40 @@ export default function PageThuChi() {
       <div className="tc-showfilter">
         <div className="tc-sodu">
           <h2>Số dư</h2>
-          <h1>{(filteredThu - filteredChi).toLocaleString("vi-VN")}đ</h1>
+          <h1>{(filteredThu - filteredChi).toLocaleString("vi-VN")}</h1>
         </div>
 
         <div className="tc-tongthuchi">
           <div className="tc-tongchi">
             <i style={{ color: "rgb(184, 85, 14)" }}><FaRegArrowAltCircleUp /></i> TỔNG CHI
-            <h1>{filteredChi.toLocaleString("vi-VN")}đ</h1>
+            <h1>{filteredChi.toLocaleString("vi-VN")}</h1>
           </div>
           <div className="tc-tongthu">
             <i style={{ color: "rgb(64, 123, 8)" }}><FaRegArrowAltCircleDown /></i> TỔNG THU
-            <h1>{filteredThu.toLocaleString("vi-VN")}đ</h1>
+            <h1>{filteredThu.toLocaleString("vi-VN")}</h1>
           </div>
         </div>
 
         <div className="tc-today">
           <div className="tc-today-text">
-            <h3>{type.toUpperCase()}</h3>
-            <h3>{filteredTotal.toLocaleString("vi-VN")}đ</h3>
-          </div>
+              {filteredOrders.length > 0 ? (
+                <>
+                  <h3>{type.toUpperCase()}</h3>
+                  <h3>
+                    {(
+                      filteredOrders
+                        .filter((o) => o.source === "thu")
+                        .reduce((sum, o) => sum + o.amount, 0) -
+                      filteredOrders
+                        .filter((o) => o.source === "chi")
+                        .reduce((sum, o) => sum + o.amount, 0)
+                    ).toLocaleString("vi-VN")}
+                  </h3>
+                </>
+              ) : (
+                <h3>Không tìm thấy kết quả phù hợp!</h3>
+              )}
+            </div>
 
           <div className="tc-list-today">
             {filteredOrders.map((order, index) => {
@@ -185,7 +213,7 @@ export default function PageThuChi() {
       </div>
 
       <div className="btn-thu-chi">
-            <button style={{background:"rgb(188, 90, 5)", color:"white" , fontSize:"1.3rem"}}><i><FaRegArrowAltCircleUp/></i> Khoản chi</button>
+            <button onClick={handleOpenTaoChi} style={{background:"rgb(188, 90, 5)", color:"white" , fontSize:"1.3rem"}}><i><FaRegArrowAltCircleUp/></i> Khoản chi</button>
             <button onClick={handleOpenTaoThu} style={{background:"rgb(55, 143, 5)", color:"white" , fontSize:"1.3rem"}}><i><FaRegArrowAltCircleDown/></i> Khoản thu</button>
       </div>
     </div>

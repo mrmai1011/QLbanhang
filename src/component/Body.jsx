@@ -2,7 +2,7 @@
 import { MdSell } from "react-icons/md";
 import { FaBoxArchive } from "react-icons/fa6";
 import { FaChartLine } from "react-icons/fa";
-import { LuArrowRightLeft} from "react-icons/lu";
+import { LuArrowRightLeft ,LuNotepadText} from "react-icons/lu";
 
 import { AiFillThunderbolt } from "react-icons/ai";
 import { BsBagFill } from "react-icons/bs";
@@ -100,6 +100,10 @@ export default function Body()
                 <div className="b-quanly-item">
                     <i className="color-red"><MdSell/></i>
                     <h3>Bán hàng</h3>
+                </div>
+                <div className="b-quanly-item">
+                    <i className="color-blue"><LuNotepadText/></i>
+                    <h3>Đơn hàng</h3>
                 </div>
                 <div className="b-quanly-item">
                     <i className="color-orange"><FaBoxArchive/></i>
@@ -214,7 +218,8 @@ export default function Body()
           {/*   page thanh toán */ }
           {currentPage === "pageThanhToan" && <PageThanhToan />}
           {currentPage === "pageThuChi" && <PageThuChi />}
-          {currentPage === "pageKhoanThu" && <TaoKhoanThu />}
+          {currentPage === "pageKhoanThu" && <TaoKhoanThu sourceType="thu"/>}
+          {currentPage === "pageKhoanChi" && <TaoKhoanThu sourceType="chi"/>}
         </div>
 
      
