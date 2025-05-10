@@ -46,9 +46,9 @@ export default function AddProduct({ onBack, exit }) {
   
     const fetchCategories = async () => {
       const { data, error } = await supabase
-        .from("category")
-        .select("*")
-        .order("id", { ascending: true });
+            .from("category")
+            .select("id, name")
+            .or(`store_id.eq.${storeId},store_id.is.null`); // storeId là UUID, ví dụ '550e8400-e29b-41d4-a716-446655440000'
   
       if (!error) {
         console.log("not error",data)
@@ -61,7 +61,7 @@ export default function AddProduct({ onBack, exit }) {
     const handleAddCategory = async () => {
       if (!newCategory.trim()) return;
   
-      const { error } = await supabase.from("category").insert([{ name: newCategory }]);
+      const { error } = await supabase.from("category").insert([{ name: newCategory , store_id:storeId }]);
       if (!error) {
         setNewCategory("");
         fetchCategories();
@@ -76,6 +76,11 @@ export default function AddProduct({ onBack, exit }) {
       // Bước 1: Chuyển toàn bộ sản phẩm về danh mục mặc định
         await supabase
         .from("products")
+        .update({ category: firstId })
+        .eq("category", id);
+         // Bước 2: Chuyển toàn bộ income về danh mục mặc định
+        await supabase
+        .from("income")
         .update({ category: firstId })
         .eq("category", id);
 

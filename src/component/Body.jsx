@@ -12,12 +12,14 @@ import logo from "../assets/logo.png"
 import AddProduct from "./body/addProduct";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { setPageAddProduct , setPageDonHang,setPageThanhToan } from "../redux/slice/pageSlice";
+import { setPageAddProduct , setPageDonHang,setPageThanhToan , setPageSoNo ,setPageBanHang, setPageThuChi} from "../redux/slice/pageSlice";
 import { useDispatch , useSelector} from "react-redux";
 import { addToOrder,decreaseItem,selectTotalItem,selectTotalPrice } from "../redux/slice/orderSlice";
 import PageThanhToan from "./body/PageThanhToan";
 import PageThuChi from "./body/PageThuChi";
 import TaoKhoanThu from "./body/PageKhoanThu";
+import PageSoNo from "./body/PageSoNo";
+import PageDonHang from "./body/PagDonHang";
 
 export default function Body()
 {
@@ -43,9 +45,9 @@ export default function Body()
   
     const fetchCategories = async () => {
       const { data, error } = await supabase
-        .from("category")
-        .select("*")
-        .order("id", { ascending: true });
+              .from("category")
+                .select("id, name")
+                .or(`store_id.eq.${storeId},store_id.is.null`); // storeId là UUID, ví dụ '550e8400-e29b-41d4-a716-446655440000'
   
       if (!error) {
         console.log("not error",data)
@@ -71,7 +73,7 @@ export default function Body()
           }
         };
     
-        if (currentPage === "pageDonHang") {
+        if (currentPage === "pageBanHang") {
             fetchProducts();
         }
       }, [storeId, currentPage,selectedCategoryId]);
@@ -81,7 +83,7 @@ export default function Body()
     const handleBack = () => {
         setExitAnimation(true); // kích hoạt animation rút ra
         setTimeout(() => {
-          dispatch(setPageDonHang())
+          dispatch(setPageBanHang())
           setExitAnimation(false);
         }, 200); // khớp với thời gian animation
       };
@@ -90,6 +92,20 @@ export default function Body()
         dispatch(addToOrder(order))
         console.log(items)
       }
+      const handleOpenPage = (name) =>{
+        switch(name)
+        {
+          case "pageDonHang" :
+            dispatch(setPageDonHang())
+            break
+          case "pageBanHang" :
+          dispatch(setPageBanHang())
+          break
+            case "pageThuChi" :
+          dispatch(setPageThuChi())
+          break
+        }
+      }
     
    
     return(
@@ -97,11 +113,11 @@ export default function Body()
           {/*   main quản lý */}
           {currentPage === "pageQuanLi" &&
             <div className="b-quanly">
-                <div className="b-quanly-item">
+                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageBanHang")}>
                     <i className="color-red"><MdSell/></i>
                     <h3>Bán hàng</h3>
                 </div>
-                <div className="b-quanly-item">
+                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageDonHang")} >
                     <i className="color-blue"><LuNotepadText/></i>
                     <h3>Đơn hàng</h3>
                 </div>
@@ -113,7 +129,7 @@ export default function Body()
                     <i className="color-green"><FaChartLine/></i>
                     <h3>Báo cáo</h3>
                 </div>
-                <div className="b-quanly-item">
+                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageThuChi")}>
                     <i className="color-puble"><LuArrowRightLeft/></i>
                     <h3>Thu chi</h3>
                 </div>
@@ -121,7 +137,7 @@ export default function Body()
             </div>
           }
          {/*      tao don hang  */}
-         {currentPage === "pageDonHang" &&
+         {currentPage === "pageBanHang" &&
           <div className="b-donhang">
             <div className="b-donhang-timkiem">
                 <input placeholder="Tìm theo tên"></input>
@@ -202,7 +218,7 @@ export default function Body()
               <AddProduct exit={exitAnimation} onBack={handleBack} />
             </div>
           )}
-         {total > 0 && currentPage === "pageDonHang" && (
+         {total > 0 && currentPage === "pageBanHang" && (
               <button className="btn-thanhtoan" onClick={() => dispatch(setPageThanhToan())}>
               <div className="btn-left">
                <i><BsBagFill/></i> <span>{totalItem}</span>
@@ -220,6 +236,10 @@ export default function Body()
           {currentPage === "pageThuChi" && <PageThuChi />}
           {currentPage === "pageKhoanThu" && <TaoKhoanThu sourceType="thu"/>}
           {currentPage === "pageKhoanChi" && <TaoKhoanThu sourceType="chi"/>}
+            {/*   page sono */ }
+              {currentPage === "pageSoNo" && <PageSoNo/>}
+             {/*  page don hang */}
+               {currentPage === "pageDonHang" && <PageDonHang/>}
         </div>
 
      

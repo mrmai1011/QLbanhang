@@ -12,6 +12,9 @@ const pageSlice = createSlice({
     setPageDonHang: (state) => {
       state.currentPage = "pageDonHang";
     },
+     setPageBanHang: (state) => {
+      state.currentPage = "pageBanHang";
+    },
     setPageThuChi: (state) => {
       state.currentPage = "pageThuChi";
     },
@@ -32,7 +35,8 @@ const pageSlice = createSlice({
     },  
     setPageKhoanChi: (state) => {
       state.currentPage = "pageKhoanChi";
-    }
+    },
+  
 
   },
 });
@@ -40,13 +44,15 @@ const pageSlice = createSlice({
 export const {
   setPageQuanLi,
   setPageDonHang,
+  setPageBanHang,
   setPageThuChi,
   setPageSoNo,
   setPageThem,
   setPageAddProduct,
   setPageThanhToan,
   setPageKhoanThu,
-  setPageKhoanChi
+  setPageKhoanChi,
+
 } = pageSlice.actions;
 
 export default pageSlice.reducer;

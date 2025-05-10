@@ -1,9 +1,19 @@
 import { FaRegArrowAltCircleUp, FaRegArrowAltCircleDown } from "react-icons/fa";
+import { useEffect,useState } from "react";
+import { supabase } from "../../supabaseClient";
+import { useSelector } from "react-redux";
+
 
 export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders }) {
+
+
+
   const color = orders.source === "thu" ? "green" : "rgb(222, 78, 17)";
   const totalPrefix = orders.source === "thu" ? "+" : "-";
   const totalFormatted = totalPrefix + orders.amount.toLocaleString("vi-VN");
+  const [categoryMap, setCategoryMap] = useState({});
+  const storeId = useSelector((state) => state.login.store_id);
+
   const time = new Date(orders.created_at).toLocaleTimeString("vi-VN", {
     hour: "2-digit",
     minute: "2-digit",
@@ -13,6 +23,26 @@ export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders }) {
     month: "2-digit",
   });
   
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+        const { data, error } = await supabase
+                 .from("category")
+                .select("id, name")
+                .or(`store_id.eq.${storeId},store_id.is.null`); // storeId là UUID, ví dụ '550e8400-e29b-41d4-a716-446655440000'
+
+
+        if (!error && data) {
+            const map = {};
+            data.forEach((cat) => {
+                map[cat.id] = cat.name;
+            });
+            setCategoryMap(map);
+        }
+    };
+
+    fetchCategories();
+}, [storeId]);
 
   return (
     <div className="item-thuchi">
@@ -29,7 +59,11 @@ export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders }) {
           <h3 style={{ color }}>{totalFormatted}</h3>
         </div>
         <div className="item-thuchi-pay-time">
-          <div>{orders.source === "thu" ? "Thu tiền" : "Chi tiền"}</div>
+          <div>
+            {orders.source === "thu" 
+              ? `Thu ${orders.category ? ` - ${categoryMap[orders.category]}` : ""}` 
+              : `Chi ${orders.category ? ` - ${categoryMap[orders.category]}` : ""}`}
+          </div>
           <div>{orders.payment_method} | {time}</div>
         </div>
         <div className="item-thuchi-des">

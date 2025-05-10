@@ -1,6 +1,6 @@
 import { useDispatch , useSelector } from "react-redux";
 import { setPageThuChi } from "../../redux/slice/pageSlice";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { useFormattedAmount } from "../../utils/useFormattedAmount";
 import { supabase } from "../../supabaseClient";
 export default function TaoKhoanThu({ sourceType = "thu" }) {
@@ -10,7 +10,26 @@ export default function TaoKhoanThu({ sourceType = "thu" }) {
   const { amount, amountRaw, handleAmountChange } = useFormattedAmount();
   const [note, setNote] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("tiền mặt");
+    const [categories, setCategories] = useState([]);
+    const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const { data, error } = await supabase
+                     .from("category")
+                    .select("id, name")
+                    .or(`store_id.eq.${storeId},store_id.is.null`); // storeId là UUID, ví dụ '550e8400-e29b-41d4-a716-446655440000'
+
+            if (error) {
+                console.error("Lỗi khi tải category:", error);
+            } else {
+                setCategories(data);
+            }
+        };
+
+        fetchCategories();
+    }, [storeId]);
   const handleBackThuChi = () => {
       setExitAnimation(true);
       setTimeout(() => {
@@ -31,6 +50,7 @@ export default function TaoKhoanThu({ sourceType = "thu" }) {
               payment_method: paymentMethod,
               source: sourceType,
               guest: note,
+              category: selectedCategoryId || null,
               created_at: new Date().toISOString()
           }
       ]);
@@ -54,6 +74,19 @@ export default function TaoKhoanThu({ sourceType = "thu" }) {
               <label>Số tiền</label>
               <input type="text" className="input" placeholder="Nhập số tiền" onChange={handleAmountChange} value={amountRaw} />
           </div>
+           <div className="form-group" style={{ marginBottom: '10px' }}>
+                <label>Danh mục</label>
+                <select
+                    className="input"
+                    value={selectedCategoryId}
+                    onChange={(e) => setSelectedCategoryId(e.target.value)}
+                >
+                    <option value="">-- Chọn danh mục --</option>
+                    {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                </select>
+            </div>
 
           <div className="form-group" style={{ marginBottom: '10px' }}>
               <label>Nguồn tiền</label>

@@ -4,6 +4,7 @@ import { supabase } from "../../supabaseClient";
 import { useSelector , useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { setPageKhoanThu ,setPageKhoanChi} from "../../redux/slice/pageSlice";
+import { FaChevronLeft , FaChevronRight } from "react-icons/fa";
 
 export default function PageThuChi() {
   const storeId = useSelector((state) => state.login.store_id);
@@ -18,6 +19,16 @@ export default function PageThuChi() {
   const [selectedPayment, setSelectedPayment] = useState("all");
   const [selectedTransaction, setSelectedTransaction] = useState("all");
   const [type, setType] = useState("Hôm nay");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const handleOpenTaoChi =  () =>{
     dispatch(setPageKhoanChi())
 }
@@ -201,11 +212,31 @@ function applyAdditionalFilters(data, payment, transaction, newType) {
             </div>
 
           <div className="tc-list-today">
-            {filteredOrders.map((order, index) => {
-              let Icon = FaRegArrowAltCircleUp;
-              if (order.source === "thu") Icon = FaRegArrowAltCircleDown;
-              return <ItemThuChi key={index} Icon={Icon} orders={order} />;
-            })}
+             {paginatedOrders.map((order, index) => {
+                let Icon = FaRegArrowAltCircleUp;
+                if (order.source === "thu") Icon = FaRegArrowAltCircleDown;
+                return <ItemThuChi key={index} Icon={Icon} orders={order} />;
+              })}
+
+              {totalPages > 1 && (
+                <div className="pagination-controls" style={{ marginTop: "10px", textAlign: "center" }}>
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    style={{ marginRight: "10px" }}
+                  >
+                   <i><FaChevronLeft/></i>
+                  </button>
+                  <span>Trang {currentPage}/{totalPages}</span>
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    style={{ marginLeft: "10px" }}
+                  >
+                     <i><FaChevronRight/></i>
+                  </button>
+                </div>
+              )}
           </div>
           {/*   tạo khoản trắng ở dưới */}
           <div style={{height:"50px"}}></div>

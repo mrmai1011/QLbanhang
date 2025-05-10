@@ -35,6 +35,15 @@
     width: 100%;
     height: 752px;
     padding: 16px;
+       &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Ẩn scrollbar trên Firefox */
+    scrollbar-width: none;
+
+    /* Ẩn scrollbar trên IE, Edge cũ */
+    -ms-overflow-style: none;
 
    .b-quanly{
     display: flex;
@@ -85,6 +94,15 @@
       flex-direction: column;
       width: 100%;
       overflow-y: auto;
+         &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Ẩn scrollbar trên Firefox */
+    scrollbar-width: none;
+
+    /* Ẩn scrollbar trên IE, Edge cũ */
+    -ms-overflow-style: none;
       input {
         padding: 12px;
         border: 1px solid #ccc;
@@ -271,7 +289,15 @@
     overflow-x: auto;
     padding: 8px 0;
     white-space: nowrap;
-    scrollbar-width: thin; /* Firefox */
+      &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Ẩn scrollbar trên Firefox */
+    scrollbar-width: none;
+
+    /* Ẩn scrollbar trên IE, Edge cũ */
+    -ms-overflow-style: none;
   }
   
   .category-list li {
@@ -298,6 +324,82 @@
   
   
     
+  }
+  /* page don hang */
+  .page-donhang{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    .dh-filter-wapper{
+    overflow-x: auto;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+     &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Ẩn scrollbar trên Firefox */
+    scrollbar-width: none;
+
+    /* Ẩn scrollbar trên IE, Edge cũ */
+    -ms-overflow-style: none;
+   
+      height: 40px;
+      .dh-select-day,
+      .dh-select-payment,
+      .dh-select-transaction{
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 16px;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+
+      
+    }
+    .item-donhang{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 120px;
+      background-color: gainsboro;
+      border-radius: 5px;
+      margin-top: 10px;
+      box-shadow: 1px 1px 0px 0px rgba(83, 82, 82, 0.658);
+      .item-donhang-name{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+      }
+      .item-donhang-date{
+        display: flex;
+        justify-content: space-between;
+         padding-left: 10px;
+         padding-right: 10px;
+         padding-bottom: 10px;
+         width: 100%;
+         
+      }
+      .item-donhang-bottom{
+        display: flex;
+        flex-direction: column;
+        .item-donhang-tong{
+          display: flex;
+          justify-content: space-between;
+         padding: 10px;
+
+        }
+      }
+     
+    }
+   
   }
   
   
@@ -540,7 +642,8 @@
     
     
   }
-
+  /* select day */
+  
 
   /* page thu chi */
   .page-thuchi{
@@ -548,25 +651,33 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
-
     .tc-filter-wapper{
-      overflow-x: auto;
-     
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-
-        .tc-select-day,
-        .tc-select-payment,
-        .tc-select-transaction{
-          padding: 8px;
-          font-size: 16px;
-          border-radius: 16px;
-          border: 1px solid #ccc;
-          text-align: center;
-        }
-       
+    overflow-x: auto;
+      &::-webkit-scrollbar {
+        display: none;
     }
+
+    /* Ẩn scrollbar trên Firefox */
+    scrollbar-width: none;
+
+    /* Ẩn scrollbar trên IE, Edge cũ */
+    -ms-overflow-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+
+      .tc-select-day,
+      .tc-select-payment,
+      .tc-select-transaction{
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 16px;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+      
+    }
+  
     .btn-thu-chi{
       position: fixed;
       bottom: 100px;
@@ -637,15 +748,7 @@
           border-radius: 10px;
            line-height: 50px;
           text-align: center;
-/* 
-          i{
-            font-size: 1.5rem;
-            color: rgb(202, 74, 5);
-            text-shadow: black;
-            position: absolute;
-            left: 50px;
-       
-          } */
+
           h1{
             color: rgb(202, 74, 5);
            text-shadow: 1px black;
@@ -754,6 +857,62 @@
       }
     }
   }
+
+ /*  page So No */
+ .page-sono{
+   display: flex;
+    flex-direction: column;
+    padding: 10px;
+    .sono-phaithu{
+      gap: 20px;
+      padding-top: 20px;
+      padding-left: 30px;
+      padding-right: 30px;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 150px;
+      background-color: rgba(3, 152, 13, 0.541);
+      border-radius: 10px;
+      justify-content: start;
+      text-align: start;
+    }
+    .sono-list-kh{
+      padding-top: 20px;
+
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      justify-content: center;
+      text-align: center;
+         &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Ẩn scrollbar trên Firefox */
+    scrollbar-width: none;
+
+    /* Ẩn scrollbar trên IE, Edge cũ */
+    -ms-overflow-style: none;
+      .item-sono{
+        display: flex;
+        flex-direction: column;
+        height: 80px;
+        border-bottom: solid 1px rgb(134, 132, 132);
+        margin-top: 10px;
+     
+      justify-content: center;
+        .item-sono-top , .item-sono-bottom {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    }
+ }
 
   /*  tạo khoản thu */
   .tao-khoan-thu {

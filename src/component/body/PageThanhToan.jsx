@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectTotalPrice } from "../../redux/slice/orderSlice";
 import { selectOrderItems } from "../../redux/slice/orderSlice";
 import { clearOrder } from "../../redux/slice/orderSlice";
-import { setPageDonHang } from "../../redux/slice/pageSlice";
+import { setPageDonHang ,setPageBanHang} from "../../redux/slice/pageSlice";
 import { useState } from "react";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdAttachMoney } from "react-icons/md";
@@ -32,7 +32,7 @@ export default function PageThanhToan() {
     setExitAnimation(true); // kích hoạt animation rút ra
     setTimeout(() => {
         
-        dispatch(setPageDonHang())
+        dispatch(setPageBanHang())
         setExitAnimation(false);
       }, 200); // khớp với thời gian animation
     
@@ -73,7 +73,7 @@ export default function PageThanhToan() {
     } else {
       alert("Đã thanh toán và lưu đơn hàng!");
       dispatch(clearOrder());
-      dispatch(setPageDonHang());
+      dispatch(setPageBanHang());
     }
  
   };

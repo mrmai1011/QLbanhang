@@ -7,6 +7,7 @@ import { MdSell } from "react-icons/md";
 import {
     setPageQuanLi,
     setPageDonHang,
+    setPageBanHang,
     setPageThuChi,
     setPageSoNo,
     setPageThem
@@ -26,7 +27,7 @@ export default function Footer(){
         <h3>Quản lý</h3>
       </i>
 
-      <i onClick={() => dispatch(setPageDonHang())} style={{ color: currentPage === "pageDonHang" ? activeColor : defaultColor }}>
+      <i onClick={() => dispatch(setPageBanHang())} style={{ color: currentPage === "pageBanHang" ? activeColor : defaultColor }}>
         <MdSell />
         <h3>Bán hàng</h3>
       </i>
