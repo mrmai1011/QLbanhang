@@ -10,7 +10,7 @@ function App() {
   const currentPage = useSelector((state) => state.page.currentPage);
   return (
     <>
-      <Header/>
+       {!isLogin &&<Header/>}
       <LoginForm/>
       {isLogin && <Body/>}
       {isLogin && <Footer/> } 

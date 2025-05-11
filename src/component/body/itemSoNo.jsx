@@ -2,10 +2,10 @@
 
 
 
-export default function ItemSoNo({order}){
+export default function ItemSoNo({order, onClick}){
 
     return(
-        <div className="item-sono">
+        <div className="item-sono" onClick={onClick}>
                 <div className="item-sono-top">
                     <h3>{order.guest}</h3>
                     <h2 style={{color:"rgb(21, 155, 6)"}}>{order.debt.toLocaleString("vi-VN")}</h2>

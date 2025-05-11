@@ -29,7 +29,7 @@
       
   .body{
     position: absolute;
-    top: 90px;
+    top: 5px;
     flex: 1;
     overflow-y: auto;
     width: 100%;
@@ -93,6 +93,7 @@
       display: flex;
       flex-direction: column;
       width: 100%;
+      height: 100%;
       overflow-y: auto;
          &::-webkit-scrollbar {
         display: none;
@@ -334,27 +335,18 @@
     right: 0;
     width: 100%;
     height: 100%;
-    padding: 10px;
+    padding: 30px;
     .dh-filter-wapper{
-    overflow-x: auto;
+ /*    overflow-x: auto; */
 
     display: flex;
     justify-content: space-between;
-    gap: 10px;
-     &::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Ẩn scrollbar trên Firefox */
-    scrollbar-width: none;
-
-    /* Ẩn scrollbar trên IE, Edge cũ */
-    -ms-overflow-style: none;
+   
    
       height: 40px;
       .dh-select-day,
-      .dh-select-payment,
-      .dh-select-transaction{
+      .dh-select-status
+      {
         padding: 8px;
         font-size: 16px;
         border-radius: 16px;
@@ -401,6 +393,121 @@
     }
    
   }
+
+/*   detail Don hang */
+.detail-container {
+  padding: 10px;
+ 
+  margin: 20px auto;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-back-detail {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 10px 20px;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back-detail:hover {
+  background-color: #d5d5d5;
+}
+
+.detail-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.detail-info {
+  background-color: #ffffffcf;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.detail-info p {
+  font-size: 16px;
+  margin: 12px 0;
+  color: #555;
+}
+
+.label {
+  font-weight: bold;
+  color: #222;
+  display: inline-block;
+  min-width: 140px;
+}
+
+.btn-pay {
+  margin-top: 32px;
+  width: 100%;
+  padding: 14px;
+  background-color: #28a745;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-pay:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.order-items {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+
+.items-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+  text-align: center;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #ddd;
+  font-size: 16px;
+  color: #555;
+}
+
+.item-name {
+  flex: 1;
+}
+
+.item-quantity {
+  width: 50px;
+  text-align: center;
+}
+
+.item-price {
+  width: 100px;
+  text-align: right;
+  color: #222;
+  font-weight: bold;
+}
+
+
   
   
   .slide-in {
@@ -1019,6 +1126,10 @@
   }
 
   .Login-Form {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50px;
     max-width: 360px;
     margin: 100px auto;
     padding: 30px;
@@ -1099,12 +1210,12 @@
       width: 360px;
     }
     .body {
-      height: 560px;
+      height: 600px;
       .b-quanly .b-quanly-item{
         width: 100px;
       }
       .b-donhang {
-        height: 495px;
+       
         .b-donhang-wapper .b-donhang-bannhanh{
           width: 98px;
         }
@@ -1132,12 +1243,12 @@
       width: 375px;
     }
     .body {
-      height: 487px;
+      height: 527px;
       .b-quanly .b-quanly-item{
         width: 103px;
       }
       .b-donhang {
-        height: 425px;
+      
         .b-donhang-wapper .b-donhang-bannhanh{
           width: 103px;
         }
@@ -1164,12 +1275,12 @@
       width: 390px;
     }
     .body {
-      height: 664px;
+      height: 704px;
       .b-quanly .b-quanly-item{
         width: 108px;
       }
       .b-donhang {
-        height: 602px;
+       
         .b-donhang-wapper .b-donhang-bannhanh{
           width: 108px;
         }
@@ -1196,12 +1307,12 @@
       width: 412px;
     }
     .body {
-      height: 735px;
+      height: 775px;
       .b-quanly .b-quanly-item{
         width: 115px;
       }
       .b-donhang {
-        height: 670px;
+       
         .b-donhang-wapper .b-donhang-bannhanh{
           width: 115px;
         }
@@ -1230,12 +1341,12 @@
       width: 414px;
     }
     .body {
-      height: 716px;
+      height: 756px;
       .b-quanly .b-quanly-item{
         width: 116px;
       }
       .b-donhang{
-        height: 650px;
+    
         .b-donhang-wapper .b-donhang-bannhanh{
           width: 116px;
         }
@@ -1265,12 +1376,12 @@
       width: 430px;
     }
     .body {
-      height: 752px;
+      height: 792px;
       .b-quanly .b-quanly-item{
         width: 121px;
       }
       .b-donhang {
-        height: 690px;
+     
     
         .b-donhang-wapper .b-donhang-bannhanh{
           width: 121px;

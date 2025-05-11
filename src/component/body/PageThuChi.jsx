@@ -62,14 +62,17 @@ export default function PageThuChi() {
   useEffect(() => {
     // Tính số dư và tổng thu/chi chỉ dựa vào selectedDay
     const { data: dayFilteredData, thu, chi, newType } = filterDataByTimeRange(allData, selectedDay);
-
+    // ✅ Sắp xếp theo thời gian giảm dần (gần nhất đến lâu nhất)
+    const sortedData = [...dayFilteredData].sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
     setFilteredTotal(dayFilteredData.reduce((sum, o) => sum + o.amount, 0));
     setFilteredThu(thu);
     setFilteredChi(chi);
     setType(newType);
 
     // Tiếp tục filter thêm cho List Today (Payment & Transaction)
-    let finalList = dayFilteredData;
+    let finalList = sortedData;
 
     if (selectedPayment !== "all") {
         finalList = finalList.filter((item) => item.payment_method === selectedPayment);

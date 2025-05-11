@@ -4,7 +4,12 @@ import { useState, useEffect } from "react";
 import { FaRegArrowAltCircleDown } from "react-icons/fa"
 import ItemSoNo from "./itemSoNo"
 import { supabase } from "../../supabaseClient";
+import { useDispatch } from "react-redux";
+import { setPageDetailDonHang } from "../../redux/slice/pageSlice";
+import { setDetailDonHang } from "../../redux/slice/orderSlice";
+
 export default function PageSoNo() {
+    const dispatch = useDispatch()
       const [orders, setOrders] = useState([]);
       useEffect(() => {
         const fetchDebtOrders = async () => {
@@ -16,7 +21,10 @@ export default function PageSoNo() {
             if (error) {
                 console.error("Lỗi khi lấy danh sách nợ:", error);
             } else {
-                setOrders(data);
+                const sortedData = [...data].sort(
+                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                );
+                setOrders(sortedData);
             }
         };
 
@@ -39,7 +47,13 @@ export default function PageSoNo() {
 
                     {orders.length > 0 ? (
                         orders.map((order) => (
-                            <ItemSoNo  order={order} />
+                            <ItemSoNo key={order.id_bill}  order={order} 
+                                onClick={() => {
+                                            dispatch(setDetailDonHang({order,fromPage:"pageSoNo"}));
+                                            dispatch(setPageDetailDonHang())
+                                            
+                                            }} 
+                             />
                         ))
                     ) : (
                         <p>Không có khách hàng nợ.</p>

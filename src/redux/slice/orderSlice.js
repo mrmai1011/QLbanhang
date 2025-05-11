@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const orderSlice = createSlice({
   name: "order",
   initialState: {
-    items: [],
+  items: [],
+  detailDonHang: null, // Lưu đơn hàng chi tiết
+  fromPage: null,
    
   },
   reducers: {
@@ -33,10 +35,18 @@ const orderSlice = createSlice({
     clearOrder: (state) => {
       state.items = [];
     },
+     setDetailDonHang: (state, action) => {
+      state.detailDonHang = action.payload.order; // Cập nhật đơn hàng chi tiết
+       state.fromPage = action.payload.fromPage; // 👈 Ghi nhận trang mở
+    },
+    clearDetailDonHang: (state) => {
+      state.detailDonHang = null; // Xóa thông tin chi tiết khi không cần nữa
+       state.fromPage = null; // Xóa luôn thông tin nguồn trang khi clear
+    },
   },
 });
 
-export const { addToOrder, clearOrder,decreaseItem } = orderSlice.actions;
+export const { addToOrder, clearOrder,decreaseItem , setDetailDonHang, clearDetailDonHang} = orderSlice.actions;
 
 export const selectOrderItems = (state) => state.order.items;
 

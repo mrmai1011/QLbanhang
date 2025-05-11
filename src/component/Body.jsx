@@ -20,6 +20,8 @@ import PageThuChi from "./body/PageThuChi";
 import TaoKhoanThu from "./body/PageKhoanThu";
 import PageSoNo from "./body/PageSoNo";
 import PageDonHang from "./body/PagDonHang";
+import DetailDonHang from "./body/DetailDonHang";
+
 
 export default function Body()
 {
@@ -240,6 +242,8 @@ export default function Body()
               {currentPage === "pageSoNo" && <PageSoNo/>}
              {/*  page don hang */}
                {currentPage === "pageDonHang" && <PageDonHang/>}
+           {/*     detail don hang */}
+              {currentPage === "pageDetailDonHang" && <DetailDonHang/>}
         </div>
 
      
