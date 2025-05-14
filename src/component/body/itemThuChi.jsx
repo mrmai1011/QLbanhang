@@ -4,7 +4,7 @@ import { supabase } from "../../supabaseClient";
 import { useSelector } from "react-redux";
 
 
-export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders }) {
+export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders , onClick }) {
 
 
 
@@ -13,6 +13,8 @@ export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders }) {
   const totalFormatted = totalPrefix + orders.amount.toLocaleString("vi-VN");
   const [categoryMap, setCategoryMap] = useState({});
   const storeId = useSelector((state) => state.login.store_id);
+
+    const thuchi = useSelector((state) => state.order.detailThuChi);
 
   const time = new Date(orders.created_at).toLocaleTimeString("vi-VN", {
     hour: "2-digit",
@@ -43,9 +45,16 @@ export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders }) {
 
     fetchCategories();
 }, [storeId]);
+  const handleShowDetail = () => {
+    if (onClick) {
+      onClick(orders);
+      /* console.log(thuchi); */
+      
+    }
+  };
 
   return (
-    <div className="item-thuchi">
+    <div className="item-thuchi" onClick={handleShowDetail} >
 
       <i style={{ color, fontSize: "1.5rem" }}><Icon /></i>
       <div className="item-thuchi-action">

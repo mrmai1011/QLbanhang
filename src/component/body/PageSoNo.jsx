@@ -46,8 +46,8 @@ export default function PageSoNo() {
 
 
                     {orders.length > 0 ? (
-                        orders.map((order) => (
-                            <ItemSoNo key={order.id_bill}  order={order} 
+                        orders.map((order,index) => (
+                            <ItemSoNo key={index}  order={order} 
                                 onClick={() => {
                                             dispatch(setDetailDonHang({order,fromPage:"pageSoNo"}));
                                             dispatch(setPageDetailDonHang())
@@ -56,7 +56,7 @@ export default function PageSoNo() {
                              />
                         ))
                     ) : (
-                        <p>Không có khách hàng nợ.</p>
+                        <p style={{paddingTop:"30px", color:"green", fontWeight:"bold"}}>Không có khách hàng nợ.</p>
                     )}
                 </div>
             </div>

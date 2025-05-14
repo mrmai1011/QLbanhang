@@ -3,8 +3,9 @@ import ItemThuChi from "./itemThuChi";
 import { supabase } from "../../supabaseClient";
 import { useSelector , useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { setPageKhoanThu ,setPageKhoanChi} from "../../redux/slice/pageSlice";
+import { setPageKhoanThu ,setPageKhoanChi,setPageDetailThuChi} from "../../redux/slice/pageSlice";
 import { FaChevronLeft , FaChevronRight } from "react-icons/fa";
+import { setDetailThuChi } from "../../redux/slice/orderSlice";
 
 export default function PageThuChi() {
   const storeId = useSelector((state) => state.login.store_id);
@@ -23,6 +24,7 @@ export default function PageThuChi() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const role = useSelector((state) => state.login.role);
 
   const paginatedOrders = filteredOrders.slice(
     (currentPage - 1) * itemsPerPage,
@@ -50,7 +52,11 @@ export default function PageThuChi() {
 
     return data;
   };
-
+  useEffect(() => {
+    if (role === "manager") {
+      setSelectedDay("today");
+    }
+  }, [role]);
   useEffect(() => {
     const getData = async () => {
       const data = await fetchAllIncomeByStore(storeId);
@@ -153,16 +159,17 @@ function applyAdditionalFilters(data, payment, transaction, newType) {
   };
 }
 
+
   return (
     <div className="page-thuchi">
       <div className="tc-filter-wapper">
         <select className="tc-select-day" onChange={(e) => setSelectedDay(e.target.value)}>
           <option value="today">Hôm nay</option>
-          <option value="yesterday">Hôm qua</option>
-          <option value="thismonth">Tháng này</option>
-          <option value="lastmonth">Tháng trước</option>
-          <option value="thisyear">Năm này</option>
-          <option value="all">Tất cả</option>
+          <option value="yesterday" disabled={role === "manager"}>Hôm qua</option>
+          <option value="thismonth" disabled={role === "manager"}>Tháng này</option>
+          <option value="lastmonth" disabled={role === "manager"}>Tháng trước</option>
+          <option value="thisyear" disabled={role === "manager"}>Năm này</option>
+          <option value="all" disabled={role === "manager"}>Tất cả</option>
         </select>
         <select className="tc-select-payment" onChange={(e) => setSelectedPayment(e.target.value)}>
           <option value="all">Nguồn tiền</option>
@@ -218,7 +225,12 @@ function applyAdditionalFilters(data, payment, transaction, newType) {
              {paginatedOrders.map((order, index) => {
                 let Icon = FaRegArrowAltCircleUp;
                 if (order.source === "thu") Icon = FaRegArrowAltCircleDown;
-                return <ItemThuChi key={index} Icon={Icon} orders={order} />;
+                return <ItemThuChi key={index} Icon={Icon} orders={order}
+                  onClick={() => {
+                    dispatch(setDetailThuChi( order));
+                    dispatch(setPageDetailThuChi());
+                  }}
+                 />;
               })}
 
               {totalPages > 1 && (

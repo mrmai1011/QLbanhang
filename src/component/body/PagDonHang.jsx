@@ -5,9 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { FaChevronLeft , FaChevronRight } from "react-icons/fa";
 import { setDetailDonHang } from "../../redux/slice/orderSlice";
 import { setPageDetailDonHang } from "../../redux/slice/pageSlice";
+import { FaSpinner } from "react-icons/fa";
 
 export default function PageDonHang() {
-  const [selectedDay, setSelectedDay] = useState("all");
+  const [selectedDay, setSelectedDay] = useState("today");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -17,17 +18,25 @@ export default function PageDonHang() {
   const storeId = useSelector((state) => state.login.store_id);
 
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false);
+  const role = useSelector((state) => state.login.role);
+  
 
   useEffect(() => {
     fetchOrders();
   }, []);
-
+  useEffect(() => {
+  if (role === "manager") {
+    setSelectedDay("today");
+  }
+}, [role]);
   useEffect(() => {
     setCurrentPage(1);
     applyFilters();
   }, [selectedDay, selectedStatus, orders]);
 
   const fetchOrders = async () => {
+     setLoading(true); // Bắt đầu loading
     const { data, error } = await supabase
       .from("orders")
       .select("*")
@@ -36,11 +45,13 @@ export default function PageDonHang() {
 
     if (error) {
       console.error("Lỗi khi fetch orders:", error);
+      setLoading(false);
       return;
     }
 
     setOrders(data);
     setFilteredOrders(data);
+    setLoading(false);
   };
 
   const applyFilters = () => {
@@ -89,7 +100,7 @@ export default function PageDonHang() {
           onChange={(e) => setSelectedDay(e.target.value)}
         >
           <option value="today">Hôm nay</option>
-          <option value="all">Tất cả</option>
+          <option value="all" disabled={role === "manager"}>Tất cả</option>
         </select>
 
         {/* Filter Trạng thái */}
@@ -105,16 +116,20 @@ export default function PageDonHang() {
       </div>
 
       {/* Danh sách đơn hàng */}
-      {paginatedOrders.length > 0 ? (
-        paginatedOrders.map((order) => (
-          <ItemDonHang key={order.id_bill} order={order}
-           
-              onClick={() => {
-                dispatch(setDetailDonHang({order,fromPage:"pageDonHang"}));
-                dispatch(setPageDetailDonHang())
-                
-              }}
-           />
+        {loading ? (
+         <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <FaSpinner className="spin-icon" size={30} color="#3498db" />
+        </div>
+      ) : paginatedOrders.length > 0 ? (
+        paginatedOrders.map((order,index) => (
+          <ItemDonHang
+            key={index}
+            order={order}
+            onClick={() => {
+              dispatch(setDetailDonHang({ order, fromPage: "pageDonHang" }));
+              dispatch(setPageDetailDonHang());
+            }}
+          />
         ))
       ) : (
         <p style={{ textAlign: "center", marginTop: "20px" }}>
@@ -123,13 +138,15 @@ export default function PageDonHang() {
       )}
 
     {/* Pagination Controls */}
-{totalPages > 1 && (
+  {totalPages > 1 && (
   <div
+  
     style={{
+    
       position: "fixed",
       bottom: "100px",
-      left: 0,
-      right: 0,
+      left: "100px",
+    
       textAlign: "center",
       zIndex: 1000, // Ưu tiên hiển thị trên cùng
     }}

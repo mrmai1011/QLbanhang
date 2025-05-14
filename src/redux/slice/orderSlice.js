@@ -5,6 +5,8 @@ const orderSlice = createSlice({
   initialState: {
   items: [],
   detailDonHang: null, // Lưu đơn hàng chi tiết
+  detailThuChi: null, // Lưu thông tin chi tiết thu chi
+  detailProduct: null, // Lưu thông tin chi tiết sản phẩm
   fromPage: null,
    
   },
@@ -43,10 +45,22 @@ const orderSlice = createSlice({
       state.detailDonHang = null; // Xóa thông tin chi tiết khi không cần nữa
        state.fromPage = null; // Xóa luôn thông tin nguồn trang khi clear
     },
+    setDetailThuChi: (state, action) => {
+      state.detailThuChi = action.payload; // Cập nhật thông tin chi tiết thu chi
+    },
+    clearDetailThuChi: (state) => {
+      state.detailThuChi = null; // Xóa thông tin chi tiết khi không cần nữa
+    },
+    setDetailProduct : (state, action) => {
+      state.detailProduct = action.payload; // Cập nhật thông tin chi tiết sản phẩm
+    },
+    clearDetailProduct : (state) => {
+      state.detailProduct = null; // Xóa thông tin chi tiết khi không cần nữa
+    }
   },
 });
 
-export const { addToOrder, clearOrder,decreaseItem , setDetailDonHang, clearDetailDonHang} = orderSlice.actions;
+export const { addToOrder, clearOrder,decreaseItem , setDetailDonHang, clearDetailDonHang , setDetailThuChi, clearDetailThuChi , setDetailProduct, clearDetailProduct} = orderSlice.actions;
 
 export const selectOrderItems = (state) => state.order.items;
 

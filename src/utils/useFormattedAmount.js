@@ -19,6 +19,11 @@ export const useFormattedAmount = (max = Infinity) => {
     setAmountRaw(formatNumber(value));
     setAmount(value);
   };
+  const setAmountDirect = (value) => {
+  const val = Math.min(value || 0, max);
+  setAmount(val);
+  setAmountRaw(formatNumber(val));
+};
 
-  return { amount, amountRaw, handleAmountChange };
+  return { amount, amountRaw, handleAmountChange,  setAmountDirect} // ✅ Thêm dòng này };
 };

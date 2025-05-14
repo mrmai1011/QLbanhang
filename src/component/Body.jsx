@@ -9,10 +9,10 @@ import { BsBagFill } from "react-icons/bs";
 import { IoMdAdd } from "react-icons/io";
 import logo from "../assets/logo.png"
 
-import AddProduct from "./body/addProduct";
+import AddProduct from "./body/AddProduct";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { setPageAddProduct , setPageDonHang,setPageThanhToan , setPageSoNo ,setPageBanHang, setPageThuChi} from "../redux/slice/pageSlice";
+import { setPageAddProduct , setPageDonHang,setPageThanhToan , setPageSoNo ,setPageBanHang, setPageThuChi, setPageProduct} from "../redux/slice/pageSlice";
 import { useDispatch , useSelector} from "react-redux";
 import { addToOrder,decreaseItem,selectTotalItem,selectTotalPrice } from "../redux/slice/orderSlice";
 import PageThanhToan from "./body/PageThanhToan";
@@ -21,6 +21,9 @@ import TaoKhoanThu from "./body/PageKhoanThu";
 import PageSoNo from "./body/PageSoNo";
 import PageDonHang from "./body/PagDonHang";
 import DetailDonHang from "./body/DetailDonHang";
+
+import PageProduct from "./body/PageProduct";
+
 
 
 export default function Body()
@@ -39,8 +42,10 @@ export default function Body()
     const [categoryId, setCategoryId] = useState(null);
 
     const [selectedCategoryId, setSelectedCategoryId] = useState('1'); // "" là Tất cả danh mục
- 
-
+   const [loading, setLoading] = useState(false);
+     const detailThuChi = useSelector((state) => state.order.detailThuChi);
+     const selectedProduct = useSelector((state) => state.order.detailProduct);
+   
     useEffect(() => {
       fetchCategories();
     }, []);
@@ -59,12 +64,14 @@ export default function Body()
     };
     useEffect(() => {
         const fetchProducts = async () => {
+          setLoading(true); // Bắt đầu loading
           const { data, error } = await supabase
             .from("products")
             .select("id,name, price, imgUrl, category") // chỉ chọn cột cần dùng
             .eq("store_id", storeId);
     
           if (error) {
+            setLoading(false); // Kết thúc loading
             console.error("Lỗi khi fetch orders:", error);
           } else {
             const filtered =
@@ -72,6 +79,7 @@ export default function Body()
               ? data // Nếu là "1" → lấy hết
               : data.filter(item => String(item.category) === String(selectedCategoryId));
             setProducts(filtered);
+            setLoading(false); // Kết thúc loading
           }
         };
     
@@ -88,7 +96,14 @@ export default function Body()
           dispatch(setPageBanHang())
           setExitAnimation(false);
         }, 200); // khớp với thời gian animation
-      };
+    };
+      const handleBackProduct = () => {
+        setExitAnimation(true); // kích hoạt animation rút ra
+        setTimeout(() => {
+          dispatch(setPageProduct())
+          setExitAnimation(false);
+        }, 200); // khớp với thời gian animation
+    };
 
       const handleAddOder = (order) =>{
         dispatch(addToOrder(order))
@@ -103,8 +118,11 @@ export default function Body()
           case "pageBanHang" :
           dispatch(setPageBanHang())
           break
-            case "pageThuChi" :
+           case "pageThuChi" :
           dispatch(setPageThuChi())
+          break
+              case "pageProduct" :
+          dispatch(setPageProduct())
           break
         }
       }
@@ -123,7 +141,7 @@ export default function Body()
                     <i className="color-blue"><LuNotepadText/></i>
                     <h3>Đơn hàng</h3>
                 </div>
-                <div className="b-quanly-item">
+                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageProduct")}>
                     <i className="color-orange"><FaBoxArchive/></i>
                     <h3>Sản phẩm</h3>
                 </div>
@@ -139,6 +157,7 @@ export default function Body()
             </div>
           }
          {/*      tao don hang  */}
+        
          {currentPage === "pageBanHang" &&
           <div className="b-donhang">
             <div className="b-donhang-timkiem">
@@ -153,12 +172,14 @@ export default function Body()
                   ))}
               </select>
             </div>
+          
             <div className="b-donhang-wapper">
               
                 <div className="b-donhang-bannhanh">
                     <i><AiFillThunderbolt/></i>
                     <h3>Bán nhanh</h3>
                 </div>
+
                 {products.map((order, index) => {
                   const existingItem = items.find(item => item.id === order.id);
                   
@@ -212,6 +233,8 @@ export default function Body()
 
             </div>
           </div>
+            
+          
          }
 
           {/* Hiển thị bảng thêm sản phẩm */}
@@ -233,6 +256,11 @@ export default function Body()
               </div>
             </button>
             )}
+         {/*    hiển thị bảng sản phẩm */}
+           {currentPage === "pageProduct" && <PageProduct/>}
+            {currentPage === "pageDetailProduct" &&  <AddProduct product={selectedProduct} onBack={handleBackProduct} exit={exitAnimation} />}
+           
+
           {/*   page thanh toán */ }
           {currentPage === "pageThanhToan" && <PageThanhToan />}
           {currentPage === "pageThuChi" && <PageThuChi />}
@@ -244,8 +272,12 @@ export default function Body()
                {currentPage === "pageDonHang" && <PageDonHang/>}
            {/*     detail don hang */}
               {currentPage === "pageDetailDonHang" && <DetailDonHang/>}
+              {/* detail thu chi */}
+             
+              {currentPage === "pageDetailThuChi" && <TaoKhoanThu sourceType={detailThuChi.source} detail={detailThuChi}/>}
+            
         </div>
-
+         
      
 
     );

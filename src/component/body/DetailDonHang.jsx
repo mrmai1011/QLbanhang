@@ -101,7 +101,7 @@ export default function DetailDonHang() {
           </ul>
         </div>
       )}
-
+  
     <p><span className="label">ID:</span> {order.id_bill.slice(0,8)}</p>
     {/*   <p><span className="label">order:</span> {order.items}</p> */}
     <p><span className="label">Ghi chú:</span> {order.note}</p>

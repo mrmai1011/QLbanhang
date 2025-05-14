@@ -5,202 +5,245 @@ import { useSelector } from "react-redux";
 import { TiDelete } from "react-icons/ti";
 import { useFormattedAmount } from "../../utils/useFormattedAmount";
 
-export default function AddProduct({ onBack, exit }) {
-    const [name, setName] = useState("");
-    
-    const [image, setImage] = useState(null);
-    const [loading, setLoading] = useState(false);
+export default function AddProduct({ product = null, onBack, exit }) {
     const storeId = useSelector((state) => state.login.store_id);
-    const role = useSelector((state) => state.login.role);
-    
-    const [categories, setCategories] = useState([]);
-    const [categoryId, setCategoryId] = useState(null);
-    const [newCategory, setNewCategory] = useState("");
+  const role = useSelector((state) => state.login.role);
 
- 
-    const { amount, amountRaw, handleAmountChange } = useFormattedAmount();
+  const isEditMode = !!product;
 
+  const [name, setName] = useState(product?.name || "");
+  const [image, setImage] = useState(null);
+  const [imgUrl, setImgUrl] = useState(product?.imgUrl || "");
+  const [oldImgPublicId, setOldImgPublicId] = useState(product?.img_public_id || null);
+  const [loading, setLoading] = useState(false);
 
-    const formatNumber = (value) => {
-      return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    };
+  const { amount, amountRaw, handleAmountChange, setAmountDirect } = useFormattedAmount();
 
-    const unformatNumber = (value) => {
-      return value.replace(/\./g, "");
-    };
+  const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState(product?.category || null);
 
-    const handlePriceChange = (e) => {
-      const input = e.target.value;
-      const numeric = unformatNumber(input);
+  useEffect(() => {
+    fetchCategories();
+    if (isEditMode) {
+      setAmountDirect(product?.price || 0);
+    }
+  }, []);
 
-      if (!/^\d*$/.test(numeric)) return; // Chỉ chấp nhận số nguyên dương
+  const fetchCategories = async () => {
+    const { data, error } = await supabase
+      .from("category")
+      .select("id, name")
+      .or(`store_id.eq.${storeId},store_id.is.null`);
 
-      setPriceRaw(formatNumber(numeric));
-      setPrice(parseInt(numeric || "0", 10));
-    };
-
-
-    useEffect(() => {
-      fetchCategories();
-    }, []);
-  
-    const fetchCategories = async () => {
-      const { data, error } = await supabase
-            .from("category")
-            .select("id, name")
-            .or(`store_id.eq.${storeId},store_id.is.null`); // storeId là UUID, ví dụ '550e8400-e29b-41d4-a716-446655440000'
-  
-      if (!error) {
-        console.log("not error",data)
-        setCategories(data);
+    if (!error) {
+      setCategories(data);
+      if (!isEditMode) {
         setCategoryId(data[0]?.id);
       }
-    };
-   
-  
-    const handleAddCategory = async () => {
-      if (!newCategory.trim()) return;
-  
-      const { error } = await supabase.from("category").insert([{ name: newCategory , store_id:storeId }]);
-      if (!error) {
-        setNewCategory("");
-        fetchCategories();
+    }
+  };
+
+  const handleDelete = async () => {
+  if (!isEditMode || !product) return;
+
+  const confirmDelete = window.confirm("Bạn có chắc muốn xóa sản phẩm này?");
+  if (!confirmDelete) return;
+
+  try {
+    setLoading(true);
+
+    // Xóa ảnh cũ nếu có
+    if (product.img_public_id) {
+      await fetch("/api/delete-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ public_id: product.img_public_id }),
+      });
+    }
+
+    // Xóa sản phẩm khỏi Supabase
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", product.id)
+      .eq("store_id", storeId);
+
+    if (error) {
+      throw error;
+    } else {
+      alert("Đã xóa sản phẩm!");
+      onBack();
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Xóa thất bại.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const deleteOldImage = async () => {
+    if (!oldImgPublicId) return;
+    await fetch("/api/delete-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ public_id: oldImgPublicId }),
+    });
+  };
+
+  const handleSaveOrUpdate = async () => {
+    if (role !== "admin") {
+      alert("Bạn không có quyền thao tác.");
+      return;
+    }
+
+    if (!name || !amount) {
+      alert("Vui lòng nhập đầy đủ thông tin.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      let imageUrl = imgUrl;
+      let imagePublicId = oldImgPublicId;
+
+      if (image) {
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "webbanhang");
+
+        const res = await fetch("https://api.cloudinary.com/v1_1/dixsdmznl/image/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        imageUrl = data.secure_url;
+        imagePublicId = data.public_id;
+
+        if (isEditMode) await deleteOldImage();
       }
-    };
-  
-    const handleDeleteCategory = async (id) => {
-      const firstId = categories[0]?.id;
-      if (id === firstId) return;
-  
-     /*  await supabase.from("category").delete().eq("id", id); */
-      // Bước 1: Chuyển toàn bộ sản phẩm về danh mục mặc định
-        await supabase
-        .from("products")
-        .update({ category: firstId })
-        .eq("category", id);
-         // Bước 2: Chuyển toàn bộ income về danh mục mặc định
-        await supabase
-        .from("income")
-        .update({ category: firstId })
-        .eq("category", id);
 
-      // Bước 2: Xóa danh mục
-      await supabase.from("category").delete().eq("id", id);
-     
-      fetchCategories();
-      
-       
-    };
+      if (isEditMode) {
+        const { error } = await supabase
+          .from("products")
+          .update({
+            name,
+            price: amount,
+            category: categoryId,
+            imgUrl: imageUrl,
+           
+          })
+          .eq("id", product.id)
+          .eq("store_id", storeId);
 
-    const handleAdd = async () => {
-        if (role !== "admin") 
-        {
-            alert("bạn không có quyền add");
-            return
-        }
-        if (!name || !amount ) {
-          alert("Vui lòng nhập đầy đủ thông tin");
-          return;
-        }
-    
-        try {
-          setLoading(true);
-    
-          // Upload lên Cloudinary
-          const formData = new FormData();
-          formData.append("file", image);
-          formData.append("upload_preset", "webbanhang");
-    
-          const res = await fetch("https://api.cloudinary.com/v1_1/dixsdmznl/image/upload", {
-            method: "POST",
-            body: formData
-          });
-    
-          const data = await res.json();
-          const imageUrl = data.secure_url;
-    
-          // Gửi vào Supabase
-          const { error } = await supabase.from("products").insert([
-            { name: name, store_id: storeId, price: amount, category: categoryId, imgUrl: imageUrl }
-          ]);
-    
-          if (error) {
-            console.error(error);
-            alert("Lỗi khi thêm sản phẩm");
-          } else {
-            alert("Đã thêm sản phẩm!");
-            onBack(); // Quay lại sau khi thêm
-          }
-    
-        } catch (err) {
-          console.error(err);
-          alert("Lỗi hệ thống");
-        } finally {
-          setLoading(false);
-        }
-      };
+        if (error) throw error;
+        alert("Đã cập nhật sản phẩm!");
+      } else {
+        const { error } = await supabase.from("products").insert([
+          {
+            name,
+            store_id: storeId,
+            price: amount,
+            category: categoryId,
+            imgUrl: imageUrl,
+           
+          },
+        ]);
+        if (error) throw error;
+        alert("Đã thêm sản phẩm!");
+      }
 
-  
-    return (
-        <div className={`add-product-form ${exit ? 'slide-out' : 'slide-in'}`}>
+      onBack();
+    } catch (err) {
+      console.error(err);
+      alert("Có lỗi xảy ra.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={`add-product-form ${exit ? "slide-out" : "slide-in"}`} style={{ padding: 20, maxWidth: 500, margin: "auto" }}>
       <button onClick={onBack} className="btn-back-product">
         <IoArrowBack size={24} /> Quay lại
       </button>
 
-      <h2>Thêm sản phẩm mới</h2>
+      <h2>{isEditMode ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới"}</h2>
+
       <input
         type="text"
         placeholder="Tên sản phẩm"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
+
       <input
         type="text"
         placeholder="Giá"
         value={amountRaw}
-        onChange={handleAmountChange }
+        onChange={handleAmountChange}
       />
-   
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setImage(e.target.files[0])}
-      />
-     <div className="category-select-row">
+
+      <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+
+      {imgUrl && !image && (
+        <img src={imgUrl} alt="Ảnh sản phẩm" style={{ width: 100, height: 100, marginTop: 10 }} />
+      )}
+
+      <div style={{ marginTop: 10 }}>
         <label className="category-label">Danh mục:</label>
-        <select
-          value={categoryId || ""}
-          onChange={e => setCategoryId(parseInt(e.target.value))}
-          className="category-select"
-        >
-          {categories.map(cat => (
-            <option key={cat.id} value={cat.id}>{cat.name}</option>
+        <select className="category-select" value={categoryId || ""} onChange={(e) => setCategoryId(parseInt(e.target.value))}>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
           ))}
         </select>
       </div>
-      <div className="category-manage">
-        <input
-          type="text"
-          placeholder="Thêm danh mục"
-          value={newCategory}
-          onChange={e => setNewCategory(e.target.value)}
-        />
-        <button onClick={handleAddCategory}>+ Thêm danh mục</button>
-      </div>
-      <ul className="category-list">
-        {categories.map((cat, index) => (
-          <li key={cat.id}>
-            {cat.name}
-            {index !== 0 && (
-              <button onClick={() => handleDeleteCategory(cat.id)}><i><TiDelete/></i></button>
-            )}
-          </li>
-        ))}
-      </ul>
+          <div
+          style={{
+            display: "flex",
+            gap: 10,
+            marginTop: 20,
+            flexDirection: isEditMode ? "row" : "column",
+          }}
+        >
+          {isEditMode && (
+            <button
+              onClick={handleDelete}
+              disabled={loading}
+              style={{
+                flex: 1,
+                backgroundColor: "red",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: 6,
+                cursor: "pointer",
+              }}
+            >
+              {loading ? "Đang xóa..." : "Xóa sản phẩm"}
+            </button>
+          )}
 
-      <button className="btn-add" onClick={handleAdd} disabled={loading}>
-        {loading ? "Đang thêm..." : "Thêm"}
-      </button>
+          <button
+            onClick={handleSaveOrUpdate}
+            disabled={loading}
+          
+            style={{
+              flex: 1,
+              backgroundColor: "#007bff",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer",
+            }}
+          >
+            {loading ? "Đang xử lý..." : isEditMode ? "Cập nhật" : "Thêm"}
+          </button>
+        </div>
     </div>
-    );
+  );
   }

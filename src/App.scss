@@ -239,6 +239,7 @@
   .category-label {
     font-weight: bold;
     width: 80px; /* Cố định độ rộng bên trái */
+
     
   }
   .category-select {
@@ -247,6 +248,8 @@
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 16px;
+    width: 73%;
+    margin-left: 10px;
   }
 
  
@@ -385,12 +388,14 @@
         .item-donhang-tong{
           display: flex;
           justify-content: space-between;
-         padding: 10px;
+         padding: 0px 10px 10px 10px;
 
         }
       }
      
     }
+
+
    
   }
 
@@ -507,7 +512,14 @@
   font-weight: bold;
 }
 
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
   
   
   .slide-in {
