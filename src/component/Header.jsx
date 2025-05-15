@@ -4,7 +4,7 @@ export default function Header()
 {
     return(
         <div className="header">
-            <img className="h-logo" src={logo}></img>
+            <img className="h-logo" src={logo} alt="Ảnh lỗi"></img>
         </div>
     );
 }

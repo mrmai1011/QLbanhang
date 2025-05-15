@@ -4,6 +4,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { TiDelete } from "react-icons/ti";
 import { useFormattedAmount } from "../../utils/useFormattedAmount";
+import { useNotifier , NotifierContainer } from "../../utils/notifier";
 
 export default function AddProduct({ product = null, onBack, exit }) {
     const storeId = useSelector((state) => state.login.store_id);
@@ -21,6 +22,8 @@ export default function AddProduct({ product = null, onBack, exit }) {
 
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState(product?.category || null);
+
+   const { notify, confirm } = useNotifier();
 
   useEffect(() => {
     fetchCategories();
@@ -46,41 +49,45 @@ export default function AddProduct({ product = null, onBack, exit }) {
   const handleDelete = async () => {
   if (!isEditMode || !product) return;
 
-  const confirmDelete = window.confirm("Bạn có chắc muốn xóa sản phẩm này?");
-  if (!confirmDelete) return;
+      const confirmed = await confirm('Bạn có chắc muốn xóa sản phẩm này?');
+      if (!confirmed) {
+        notify('Đã huỷ thao tác.', 'info');
+        return;
+      }
 
-  try {
-    setLoading(true);
+      try {
+        setLoading(true);
 
-    // Xóa ảnh cũ nếu có
-    if (product.img_public_id) {
-      await fetch("/api/delete-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ public_id: product.img_public_id }),
-      });
-    }
+        // Xóa ảnh cũ nếu có
+        if (product.img_public_id) {
+          await fetch("/api/delete-image", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ public_id: product.img_public_id }),
+          });
+        }
 
-    // Xóa sản phẩm khỏi Supabase
-    const { error } = await supabase
-      .from("products")
-      .delete()
-      .eq("id", product.id)
-      .eq("store_id", storeId);
+        // Xóa sản phẩm khỏi Supabase
+        const { error } = await supabase
+          .from("products")
+          .delete()
+          .eq("id", product.id)
+          .eq("store_id", storeId);
 
-    if (error) {
-      throw error;
-    } else {
-      alert("Đã xóa sản phẩm!");
-      onBack();
-    }
-  } catch (err) {
-    console.error(err);
-    alert("Xóa thất bại.");
-  } finally {
-    setLoading(false);
-  }
-};
+        if (error) {
+          throw error;
+        }
+
+        notify("Đã xoá sản phẩm!", "success");
+        onBack();
+      } catch (err) {
+        console.error(err);
+        notify("Xoá thất bại.", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
 
   const deleteOldImage = async () => {
     if (!oldImgPublicId) return;
@@ -93,12 +100,14 @@ export default function AddProduct({ product = null, onBack, exit }) {
 
   const handleSaveOrUpdate = async () => {
     if (role !== "admin") {
-      alert("Bạn không có quyền thao tác.");
+    
+       notify("Bạn không có quyền thao tác.", "error");
       return;
     }
 
     if (!name || !amount) {
-      alert("Vui lòng nhập đầy đủ thông tin.");
+     
+       notify("Vui lòng nhập đầy đủ thông tin.", "error");
       return;
     }
 
@@ -138,7 +147,8 @@ export default function AddProduct({ product = null, onBack, exit }) {
           .eq("store_id", storeId);
 
         if (error) throw error;
-        alert("Đã cập nhật sản phẩm!");
+    
+         notify("Đã cập nhật sản phẩm!");
       } else {
         const { error } = await supabase.from("products").insert([
           {
@@ -151,13 +161,16 @@ export default function AddProduct({ product = null, onBack, exit }) {
           },
         ]);
         if (error) throw error;
-        alert("Đã thêm sản phẩm!");
+      
+         notify("Đã thêm sản phẩm!");
+         console.log("Thêm sản phẩm thành công");
       }
 
       onBack();
     } catch (err) {
       console.error(err);
-      alert("Có lỗi xảy ra.");
+ 
+       notify("Có lỗi xảy ra.", "error");
     } finally {
       setLoading(false);
     }
@@ -225,6 +238,7 @@ export default function AddProduct({ product = null, onBack, exit }) {
             >
               {loading ? "Đang xóa..." : "Xóa sản phẩm"}
             </button>
+            
           )}
 
           <button
@@ -244,6 +258,8 @@ export default function AddProduct({ product = null, onBack, exit }) {
             {loading ? "Đang xử lý..." : isEditMode ? "Cập nhật" : "Thêm"}
           </button>
         </div>
+        <NotifierContainer />
     </div>
+    
   );
   }

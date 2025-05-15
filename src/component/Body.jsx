@@ -9,6 +9,7 @@ import { BsBagFill } from "react-icons/bs";
 import { IoMdAdd } from "react-icons/io";
 import logo from "../assets/logo.png"
 
+
 import AddProduct from "./body/AddProduct";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
@@ -190,7 +191,7 @@ export default function Body()
                       className="b-donhang-item"
                       onClick={()=>handleAddOder(order)}
                     >
-                      <img src={order.imgUrl} onError={(e) => (e.target.src = logo)} />
+                      <img src={order.imgUrl || null} onError={(e) => (e.target.src = logo)} />
                       <h3>{order.name}</h3>
                       <h3>{Number(order.price).toLocaleString("vi-VN")}</h3>
 
