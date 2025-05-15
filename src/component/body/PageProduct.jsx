@@ -5,11 +5,13 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setDetailProduct } from "../../redux/slice/orderSlice";
 import { setPageDetailProduct } from "../../redux/slice/pageSlice";
+import { useNotifier } from "../../utils/notifier";
 
 export default function PageProduct() {
     const dispatch = useDispatch();
   const storeId = useSelector((state) => state.login.store_id);
   const [products, setProducts] = useState([]);
+  const { notify , confirm} = useNotifier();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -19,7 +21,9 @@ export default function PageProduct() {
         .eq("store_id", storeId);
 
       if (error) {
-        console.error("Lỗi khi tải sản phẩm:", error.message);
+       
+        notify("Lỗi khi tải sản phẩm: " + error.message, "error");
+
       } else {
         setProducts(data);
       }
@@ -28,16 +32,17 @@ export default function PageProduct() {
     fetchProducts();
   }, [storeId]);
 
-  const handleDelete = async (product) => {
-    const confirm = window.confirm("Bạn có chắc muốn xóa sản phẩm này?");
-    if (!confirm) return;
+ /*  const handleDelete = async (product) => {
+    const confirms =  await confirm("Bạn có chắc muốn xóa sản phẩm này?");
+    if (!confirms) return;
 
     // Xóa ảnh khỏi Cloudinary nếu có
     if (product.img_public_id) {
       try {
         await axios.post("/api/delete-image", { public_id: product.img_public_id });
       } catch (err) {
-        console.error("Lỗi khi xóa ảnh trên Cloudinary:", err.message);
+       
+        notify("Lỗi khi xóa ảnh: " + err.message, "error");
       }
     }
 
@@ -49,13 +54,15 @@ export default function PageProduct() {
       .eq("store_id", storeId);
 
     if (error) {
-      alert("Xóa thất bại: " + error.message);
+    
+      notify("Xóa thất bại: " + error.message, "error");
     } else {
-      alert("Đã xóa sản phẩm!");
+    
+      notify("Đã xóa sản phẩm!", "success");
       setProducts((prev) => prev.filter((p) => p.id !== product.id));
     }
   };
-
+ */
     const handleViewDetail = (product) => {
     // Lưu thông tin sản phẩm vào Redux
         dispatch(setDetailProduct(product)); 
@@ -65,8 +72,8 @@ export default function PageProduct() {
 
 
   return (
-   <div style={{ padding: 20, display: "flex", flexDirection: "column", alignItems: "center" }}>
-    <h2>Danh sách sản phẩm</h2>
+   <div style={{ padding: 20, display: "flex", flexDirection: "column", alignItems: "center",  }}>
+    <h2 style={{  marginBottom: 30, backgroundColor:"rgba(40, 139, 7, 0.8)", height:"50px", width:"100%" ,textAlign:"center", borderRadius:"10px", lineHeight:"50px"}}>Danh sách sản phẩm</h2>
 
     {products.map((product) => (
         <div
@@ -83,6 +90,8 @@ export default function PageProduct() {
             cursor: "pointer",
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
             transition: "transform 0.2s ease",
+            backgroundColor: "#f9f9f9",
+          
         }}
         >
         {/* Ảnh (30%) */}

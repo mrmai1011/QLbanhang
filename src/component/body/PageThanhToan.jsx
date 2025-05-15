@@ -10,6 +10,7 @@ import { MdAttachMoney } from "react-icons/md";
 import { supabase } from "../../supabaseClient";
 
 import { useFormattedAmount } from "../../utils/useFormattedAmount";
+import { useNotifier } from "../../utils/notifier";
 
 export default function PageThanhToan() {
   const items = useSelector(selectOrderItems);
@@ -23,7 +24,7 @@ export default function PageThanhToan() {
   const [guest, setQuest] = useState("tới mua");
   const { amount, amountRaw, handleAmountChange } = useFormattedAmount(total);
 
-
+  const { notify} = useNotifier();
 
 
 
@@ -68,10 +69,12 @@ export default function PageThanhToan() {
     const { error1 } = await supabase.from("income").insert([income]); // hoặc gọi API bạn dùng
   
     if (error || error1) {
-      console.error("Lỗi khi lưu đơn hàng:", error);
-      alert("Đã xảy ra lỗi khi lưu đơn hàng.");
+
+      notify("Đã xảy ra lỗi khi lưu đơn hàng.", "error");
+      return;
     } else {
-      alert("Đã thanh toán và lưu đơn hàng!");
+
+      notify("Đã thanh toán và lưu đơn hàng!", "success");
       dispatch(clearOrder());
       dispatch(setPageBanHang());
     }

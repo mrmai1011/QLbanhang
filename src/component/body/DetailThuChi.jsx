@@ -3,6 +3,8 @@ import { FaArrowLeft } from "react-icons/fa";
 import { setPageThuChi } from "../../redux/slice/pageSlice";
 import { supabase } from "../../supabaseClient"; // nếu bạn dùng Supabase
 import { useState } from "react";
+import { useNotifier } from "../../utils/notifier";
+
 
 export default function DetailThuChi() {
   const dispatch = useDispatch();
@@ -14,6 +16,7 @@ export default function DetailThuChi() {
   const [note, setNote] = useState(detail.note || "");
   const [paymentMethod, setPaymentMethod] = useState(detail.payment_method || "");
   const [category, setCategory] = useState(detail.category || "");
+  const { notify, confirm } = useNotifier();
 
   if (!detail) {
     return (
@@ -26,11 +29,17 @@ export default function DetailThuChi() {
 
   const handleDelete = async () => {
     if (role !== "admin") {
-      alert("Bạn không có quyền xóa giao dịch này.");
+      
+      notify("Bạn không có quyền xóa giao dịch này.", "error");
       return;
     }
-  const confirm = window.confirm("Bạn có chắc muốn xóa giao dịch này?");
-  if (!confirm) return;
+  const confirms = await confirm("Bạn có chắc muốn xóa giao dịch này?");
+  if (!confirms)
+  {
+       notify('Đã huỷ thao tác.', 'info');
+      return;
+  }
+  
 
   const { error } = await supabase
     .from("income")
@@ -39,15 +48,18 @@ export default function DetailThuChi() {
  
 
   if (error) {
-    alert("Lỗi khi xóa: " + error.message);
+  
+    notify("Xóa thất bại!", "error");
   } else {
-    alert("Đã xóa thành công!");
+  
+    notify("Xóa thành công!", "success");
     dispatch(setPageThuChi());
   }
 };
 const handleUpdate = async () => {
     if (role !== "admin") {
-      alert("Bạn không có quyền cập nhật giao dịch này.");
+    
+      notify("Bạn không có quyền cập nhật giao dịch này.", "error");
       return;
     }
     const { error } = await supabase
@@ -62,9 +74,11 @@ const handleUpdate = async () => {
       .eq("id_store", detail.id_store);
 
     if (error) {
-      alert("Lỗi khi cập nhật: " + error.message);
+   
+      notify("Cập nhật thất bại!", "error");
     } else {
-      alert("Cập nhật thành công!");
+     
+      notify("Cập nhật thành công!", "success");
       dispatch(setPageThuChi());
     }
   };

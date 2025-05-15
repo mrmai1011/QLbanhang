@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export const useNotifier = () => {
   const notify = (message, type = 'success') => {
     toast[type](message, {
-      position: 'bottom-right',
+      position: 'top-left',
       autoClose: 1000,
     });
   };

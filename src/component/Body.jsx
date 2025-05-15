@@ -13,7 +13,7 @@ import logo from "../assets/logo.png"
 import AddProduct from "./body/AddProduct";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { setPageAddProduct , setPageDonHang,setPageThanhToan , setPageSoNo ,setPageBanHang, setPageThuChi, setPageProduct} from "../redux/slice/pageSlice";
+import { setPageAddProduct , setPageDonHang,setPageThanhToan , setPageSoNo ,setPageBanHang, setPageThuChi, setPageProduct , setPageReport} from "../redux/slice/pageSlice";
 import { useDispatch , useSelector} from "react-redux";
 import { addToOrder,decreaseItem,selectTotalItem,selectTotalPrice } from "../redux/slice/orderSlice";
 import PageThanhToan from "./body/PageThanhToan";
@@ -24,8 +24,9 @@ import PageDonHang from "./body/PagDonHang";
 import DetailDonHang from "./body/DetailDonHang";
 
 import PageProduct from "./body/PageProduct";
+import PageReport from "./body/PageReport";
 
-
+import { NotifierContainer } from "../utils/notifier";
 
 export default function Body()
 {
@@ -58,7 +59,7 @@ export default function Body()
                 .or(`store_id.eq.${storeId},store_id.is.null`); // storeId là UUID, ví dụ '550e8400-e29b-41d4-a716-446655440000'
   
       if (!error) {
-        console.log("not error",data)
+   /*      console.log("not error",data) */
         setCategories(data);
         setCategoryId(data[0]?.id);
       }
@@ -125,6 +126,9 @@ export default function Body()
               case "pageProduct" :
           dispatch(setPageProduct())
           break
+          case "pageReport" :
+          dispatch(setPageReport())
+          break
         }
       }
     
@@ -146,7 +150,7 @@ export default function Body()
                     <i className="color-orange"><FaBoxArchive/></i>
                     <h3>Sản phẩm</h3>
                 </div>
-                <div className="b-quanly-item">
+                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageReport")}>
                     <i className="color-green"><FaChartLine/></i>
                     <h3>Báo cáo</h3>
                 </div>
@@ -276,7 +280,9 @@ export default function Body()
               {/* detail thu chi */}
              
               {currentPage === "pageDetailThuChi" && <TaoKhoanThu sourceType={detailThuChi.source} detail={detailThuChi}/>}
-            
+              {/* page report */}
+              {currentPage === "pageReport" && <PageReport storeId={storeId}/>}
+            <NotifierContainer/>
         </div>
          
      

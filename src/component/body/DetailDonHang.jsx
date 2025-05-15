@@ -5,6 +5,7 @@ import { supabase } from "../../supabaseClient";
 
 import { setDetailDonHang, clearDetailDonHang } from "../../redux/slice/orderSlice";
 import { setPageDonHang , setPageSoNo} from "../../redux/slice/pageSlice";
+import { useNotifier } from "../../utils/notifier";
 
 
 export default function DetailDonHang() {
@@ -13,10 +14,12 @@ export default function DetailDonHang() {
   const order = useSelector((state) => state.order.detailDonHang);
   const fromPage = useSelector((state) => state.order.fromPage);
   const [paymentMethod, setPaymentMethod] = useState("tiền mặt");
-    const storeId = useSelector((state) => state.login.store_id);
+  const storeId = useSelector((state) => state.login.store_id);
+  const { notify, confirm } = useNotifier();
+
 
   if (!order) return <p>Không tìm thấy đơn hàng.</p>;
-
+ 
   const handleThanhToanNo = async () => {
  
 
@@ -49,11 +52,13 @@ export default function DetailDonHang() {
           if (orderError) console.error("Lỗi cập nhật đơn hàng:", orderError);
           if (incomeError) console.error("Lỗi ghi nhận giao dịch:", incomeError);
 
-          alert("Thanh toán thất bại! Vui lòng thử lại.");
+        
+          notify("Thanh toán thất bại! Vui lòng thử lại.", "error");
           return; // ❌ Dừng luôn nếu 1 trong 2 lỗi
         }
 
-        alert("Đã thanh toán nợ và ghi nhận giao dịch thành công!");
+
+        notify("Thanh toán thành công!", "success");
         if (fromPage === "pageDonHang"){
            dispatch(setPageDonHang());
         } else if (fromPage === "pageSoNo"){
@@ -64,8 +69,9 @@ export default function DetailDonHang() {
       
 
       } catch (err) {
-        console.error("Lỗi không xác định:", err);
-        alert("Đã xảy ra lỗi, vui lòng thử lại!");
+     
+      
+        notify("Đã xảy ra lỗi, vui lòng thử lại!", "error");
       }
   };
   const handleBack = () =>{

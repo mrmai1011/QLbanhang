@@ -4,7 +4,8 @@ import { IoArrowBack } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { TiDelete } from "react-icons/ti";
 import { useFormattedAmount } from "../../utils/useFormattedAmount";
-import { useNotifier , NotifierContainer } from "../../utils/notifier";
+import { useNotifier  } from "../../utils/notifier";
+import CategoryManager from "./CategoryManager";
 
 export default function AddProduct({ product = null, onBack, exit }) {
     const storeId = useSelector((state) => state.login.store_id);
@@ -22,7 +23,7 @@ export default function AddProduct({ product = null, onBack, exit }) {
 
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState(product?.category || null);
-
+  const [newCategory, setNewCategory] = useState('');
    const { notify, confirm } = useNotifier();
 
   useEffect(() => {
@@ -45,6 +46,30 @@ export default function AddProduct({ product = null, onBack, exit }) {
       }
     }
   };
+
+  const handleAddCategory = async () => {
+  if (!newCategory.trim()) {
+    notify("Vui lòng nhập tên danh mục.", "error");
+    return;
+  }
+
+  const { data, error } = await supabase.from("category").insert([
+    {
+      name: newCategory.trim(),
+      store_id: storeId,
+    },
+  ]);
+
+  if (error) {
+    notify("Thêm danh mục thất bại.", "error");
+    console.error(error);
+    return;
+  }
+
+  notify("Đã thêm danh mục!", "success");
+  setNewCategory('');
+  fetchCategories(); // Cập nhật lại danh sách danh mục
+};
 
   const handleDelete = async () => {
   if (!isEditMode || !product) return;
@@ -203,17 +228,12 @@ export default function AddProduct({ product = null, onBack, exit }) {
       {imgUrl && !image && (
         <img src={imgUrl} alt="Ảnh sản phẩm" style={{ width: 100, height: 100, marginTop: 10 }} />
       )}
-
-      <div style={{ marginTop: 10 }}>
-        <label className="category-label">Danh mục:</label>
-        <select className="category-select" value={categoryId || ""} onChange={(e) => setCategoryId(parseInt(e.target.value))}>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      
+      <CategoryManager
+        storeId={storeId}
+        selectedId={categoryId}
+        setSelectedId={setCategoryId}
+      />
           <div
           style={{
             display: "flex",
@@ -258,7 +278,7 @@ export default function AddProduct({ product = null, onBack, exit }) {
             {loading ? "Đang xử lý..." : isEditMode ? "Cập nhật" : "Thêm"}
           </button>
         </div>
-        <NotifierContainer />
+    
     </div>
     
   );

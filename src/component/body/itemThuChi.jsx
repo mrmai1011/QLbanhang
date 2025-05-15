@@ -64,7 +64,7 @@ export default function ItemThuChi({ Icon = FaRegArrowAltCircleDown, orders , on
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         maxWidth: "200px" }}
-            >Khách {orders.guest || "(Không tên)"}</h3>
+            >{orders.guest || "(Không tên)"}</h3>
           <h3 style={{ color }}>{totalFormatted}</h3>
         </div>
         <div className="item-thuchi-pay-time">

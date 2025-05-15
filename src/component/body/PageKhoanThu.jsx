@@ -3,6 +3,8 @@ import { setPageThuChi } from "../../redux/slice/pageSlice";
 import { useState , useEffect} from "react";
 import { useFormattedAmount } from "../../utils/useFormattedAmount";
 import { supabase } from "../../supabaseClient";
+import { useNotifier } from "../../utils/notifier";
+import { configs } from "eslint-plugin-react-refresh";
 
 
 export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
@@ -19,6 +21,7 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
   const [paymentMethod, setPaymentMethod] = useState(detail?.payment_method || "tiền mặt");
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(detail?.category || "");
+   const { notify, confirm } = useNotifier();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -67,9 +70,12 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
     ]);
 
     if (error) {
-      alert("Lưu thất bại: " + error.message);
+   
+      
+      notify("Lưu thất bại!", "error");
     } else {
-      alert("Lưu thành công!");
+   
+      notify("Lưu thành công!", "success");
       dispatch(setPageThuChi());
     }
   };
@@ -87,21 +93,24 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
       .eq("id_store", detail.id_store);
 
     if (error) {
-      alert("Cập nhật thất bại: " + error.message);
+   
+      notify("Cập nhật thất bại!", "error");
     } else {
-      alert("Cập nhật thành công!");
+    
+      notify("Cập nhật thành công!", "success");
       dispatch(setPageThuChi());
     }
   };
 
   const handleDelete = async () => {
     if (role !== "admin") {
-      alert("Bạn không có quyền xóa giao dịch.");
+   
+      notify("Bạn không có quyền xóa giao dịch.", "error");
       return;
     }
 
-    const confirm = window.confirm("Bạn có chắc muốn xóa?");
-    if (!confirm) return;
+    const confirms = await confirm("Bạn có chắc chắn muốn xóa giao dịch này?");
+    if (!confirms) return;
 
     const { error } = await supabase
       .from("income")
@@ -110,9 +119,11 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
       .eq("id_store", detail.id_store);
 
     if (error) {
-      alert("Xóa thất bại: " + error.message);
+    
+      notify("Xóa thất bại!", "error");
     } else {
-      alert("Đã xóa!");
+ 
+      notify("Xóa thành công!", "success");
       dispatch(setPageThuChi());
     }
   };
