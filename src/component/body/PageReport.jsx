@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
+import { useSelector } from "react-redux";
 import {
   BarChart,
   Bar,
@@ -13,6 +14,7 @@ export default function PageReport({ storeId }) {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [timeFilter, setTimeFilter] = useState("today");
+  const role = useSelector((state) => state.login.role);
 
   useEffect(() => {
     fetchData();
@@ -111,22 +113,22 @@ export default function PageReport({ storeId }) {
           style={{ marginLeft: 10, padding: 5, borderRadius: 5 }}
         >
           <option value="today">Hôm nay</option>
-          <option value="thisMonth">Tháng này</option>
-          <option value="lastMonth">Tháng trước</option>
-          <option value="thisYear">Năm nay</option>
-          <option value="lastYear">Năm trước</option>
+          <option value="thisMonth" disabled={role === "manager"}>Tháng này</option>
+          <option value="lastMonth" disabled={role === "manager"}>Tháng trước</option>
+          <option value="thisYear" disabled={role === "manager"}>Năm nay</option>
+          <option value="lastYear" disabled={role === "manager"}>Năm trước</option>
         </select>
       </div>
 
       <h3>
         Doanh thu {filterLabels[timeFilter]}:{" "}
-        <h1 style={{color:"green"}}>{totalRevenue.toLocaleString("vi-VN")}đ</h1>
+      
       </h3>
-
-      <div style={{ marginTop: 30 }}>
-        <h3>Biểu đồ sản phẩm bán chạy</h3>
+      <h1 style={{color:"green"}}>{totalRevenue.toLocaleString("vi-VN")}đ</h1>
+      <div style={{ marginTop: 30 , marginLeft: -40}}>
+        <h3 style={{marginLeft:40}}>Biểu đồ sản phẩm bán chạy</h3>
         {productReport.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={500}>
             <BarChart data={productReport}>
               <XAxis dataKey="name" />
               <YAxis />
