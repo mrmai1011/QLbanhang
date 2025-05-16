@@ -102,7 +102,7 @@ export default function DetailDonHang() {
     {order.items && order.items.length > 0 && (
         <div className="order-items">
            <div style={{ textAlign: "center" }}>
-            <img style={{ width: "100px", height: "100px" }} src={mrmai} alt="logomrmai" />
+            <img style={{ width: "200px", height: "200px" }} src={mrmai} alt="logomrmai" />
           </div>
           <h3 className="items-title">Chi tiết Đơn Hàng</h3>
           <ul>
@@ -160,7 +160,7 @@ export default function DetailDonHang() {
       <span style={{ color: "green", fontWeight: "bold" }}>Đã thanh toán</span>
     )
   ) : (
-    <span style={{ color: "orange", fontWeight: "bold" }}>Chưa thanh toán</span>
+    <span style={{ color: "orange", fontWeight: "bold" }}>còn nợ</span>
   )}
   <div style={{ marginTop: "16px", textAlign: "center", borderTop: "1px solid #ccc", paddingTop: "16px",
     paddingBottom: "16px",
