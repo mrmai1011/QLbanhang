@@ -399,6 +399,7 @@
    
   }
 
+
 /*   detail Don hang */
 .detail-container {
   padding: 10px;
@@ -1415,3 +1416,17 @@
     }
   
   }
+
+  /*   in don hang */
+@media print {
+  .non-printable {
+    display: none !important;
+  }
+
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}

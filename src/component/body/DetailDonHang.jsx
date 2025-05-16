@@ -17,21 +17,7 @@ export default function DetailDonHang() {
   const storeId = useSelector((state) => state.login.store_id);
   const { notify, confirm } = useNotifier();
   const handlePrintWithRAWBT = () => {
-    const html = `
-      <html><body>
-        <center><h3>HÓA ĐƠN BÁN HÀNG</h3></center>
-        <p>Mã đơn: 123456</p>
-        <p>Ngày: ${new Date().toLocaleDateString()}</p>
-        <p>Trà sữa x2 - 60.000đ</p>
-        <p>Bánh flan x1 - 20.000đ</p>
-        <hr>
-        <p><b>Tổng: 80.000đ</b></p>
-        <p>Cảm ơn quý khách!</p>
-      </body></html>
-    `;
-
-    const rawbtUrl = `rawbt:print?html=${encodeURIComponent(html)}`;
-    window.location.href = rawbtUrl;
+    window.print();
   };
 
   if (!order) return <p>Không tìm thấy đơn hàng.</p>;
@@ -99,9 +85,9 @@ export default function DetailDonHang() {
   }
 
   return (
-   <div className="detail-container">
+   <div className="detail-container ">
     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
-       <button className="btn-back-detail" onClick={handleBack}>
+       <button className="btn-back-detail non-printable" onClick={handleBack}>
       ← Quay lại
     </button>
     <button className="btn-back-detail" onClick={handlePrintWithRAWBT}>
@@ -109,12 +95,12 @@ export default function DetailDonHang() {
       </button>
     </div>
  
-  <h2 className="detail-title">Chi tiết Đơn Hàng</h2>
 
-  <div className="detail-info">
+
+  <div className="detail-info print-area">
     {order.items && order.items.length > 0 && (
         <div className="order-items">
-          <h3 className="items-title">Danh Sách Sản Phẩm</h3>
+          <h3 className="items-title">Chi tiết Đơn Hàng</h3>
           <ul>
             {order.items.map((item, index) => (
               <li key={index} className="item-row">

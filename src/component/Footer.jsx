@@ -20,10 +20,10 @@ export default function Footer(){
     const activeColor = "rgb(250, 235, 215)"; // hoặc màu tùy bạn (blue)  color: antiquewhite;
     const defaultColor = "rgb(65, 65, 63)";
     return(
-        <div className="footer">
-            <div className="footer">
+        <div className="footer non-printable ">
+          
       <i onClick={() => dispatch(setPageQuanLi())} style={{ color: currentPage === "pageQuanLi" ? activeColor : defaultColor }}>
-        <FaStore />
+        <FaStore  />
         <h3>Quản lý</h3>
       </i>
 
@@ -47,6 +47,6 @@ export default function Footer(){
         <h3>Thêm</h3>
       </i>
     </div>
-        </div>
+       
     );
 }
