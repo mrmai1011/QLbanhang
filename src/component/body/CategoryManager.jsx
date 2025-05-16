@@ -46,6 +46,15 @@ export default function CategoryManager({ storeId, selectedId, setSelectedId }) 
     const ok = await confirm("Bạn có chắc muốn xoá danh mục này?");
     if (!ok) return;
 
+
+  const updateCate =   await supabase
+        .from("products")
+        .update({ category: 1 })
+        .eq("category", id);
+
+    if (updateCate.error) {
+        console.error("Lỗi cập nhật danh mục sản phẩm:", updateCate.error);
+    }
     const { error } = await supabase.from("category").delete().eq("id", id);
     if (error) return notify("Xoá thất bại.", "error");
 
