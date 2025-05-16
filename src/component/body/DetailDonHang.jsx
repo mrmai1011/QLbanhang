@@ -162,15 +162,15 @@ export default function DetailDonHang() {
   ) : (
     <span style={{ color: "orange", fontWeight: "bold" }}>còn nợ</span>
   )}
-  <div style={{ marginTop: "16px", textAlign: "center", borderTop: "1px solid #ccc", paddingTop: "16px",
+
+</p>
+    <div style={{ marginTop: "16px", textAlign: "center", borderTop: "1px solid #ccc", paddingTop: "16px",
     paddingBottom: "16px",
      borderBottom: "1px solid #ccc" }}>
     <h2>Bánh su kem MR MAI</h2>
     <p>địa chỉ: 56 Từ Văn Tư, Phan Thiết, Bình thuận</p>
     <h2>SDT:03767.10080</h2>
   </div>
-</p>
-
 
   </div>
 
