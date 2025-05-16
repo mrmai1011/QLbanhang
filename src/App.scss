@@ -475,6 +475,9 @@
 }
 
 .order-items {
+  display: flex;
+  flex-direction: column;
+
   margin-top: 32px;
   padding-top: 16px;
   border-top: 1px solid #ddd;

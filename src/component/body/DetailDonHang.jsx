@@ -6,6 +6,7 @@ import { supabase } from "../../supabaseClient";
 import { setDetailDonHang, clearDetailDonHang } from "../../redux/slice/orderSlice";
 import { setPageDonHang , setPageSoNo} from "../../redux/slice/pageSlice";
 import { useNotifier } from "../../utils/notifier";
+import mrmai from "../../assets/mrmai.png";
 
 
 export default function DetailDonHang() {
@@ -100,6 +101,9 @@ export default function DetailDonHang() {
   <div className="detail-info print-area">
     {order.items && order.items.length > 0 && (
         <div className="order-items">
+           <div style={{ textAlign: "center" }}>
+            <img style={{ width: "100px", height: "100px" }} src={mrmai} alt="logomrmai" />
+          </div>
           <h3 className="items-title">Chi tiết Đơn Hàng</h3>
           <ul>
             {order.items.map((item, index) => (
