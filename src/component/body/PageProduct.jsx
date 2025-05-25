@@ -4,7 +4,7 @@ import { supabase } from "../../supabaseClient";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setDetailProduct } from "../../redux/slice/orderSlice";
-import { setPageDetailProduct } from "../../redux/slice/pageSlice";
+import { setPage } from "../../redux/slice/pageSlice";
 import { useNotifier } from "../../utils/notifier";
 
 export default function PageProduct() {
@@ -66,7 +66,7 @@ export default function PageProduct() {
     const handleViewDetail = (product) => {
     // Lưu thông tin sản phẩm vào Redux
         dispatch(setDetailProduct(product)); 
-        dispatch(setPageDetailProduct()); // Chuyển trang
+        dispatch(setPage("pageDetailProduct")) // Chuyển trang
     }
 
 

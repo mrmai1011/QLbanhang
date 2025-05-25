@@ -9,7 +9,7 @@ import CategoryManager from "./CategoryManager";
 
 export default function AddProduct({ product = null, onBack, exit }) {
     const storeId = useSelector((state) => state.login.store_id);
-  const role = useSelector((state) => state.login.role);
+  // const role = useSelector((state) => state.login.role);
 
   const isEditMode = !!product;
 
@@ -124,11 +124,11 @@ export default function AddProduct({ product = null, onBack, exit }) {
   };
 
   const handleSaveOrUpdate = async () => {
-    if (role !== "admin") {
+    // if (role !== "admin") {
     
-       notify("Bạn không có quyền thao tác.", "error");
-      return;
-    }
+    //    notify("Bạn không có quyền thao tác.", "error");
+    //   return;
+    // }
 
     if (!name || !amount) {
      

@@ -1191,6 +1191,72 @@
     
   }
 
+ /*  bán nhanh */
+ .ban-nhanh-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.ban-nhanh-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #444;
+}
+
+.ban-nhanh-form .form-group {
+  margin-bottom: 16px;
+}
+
+.ban-nhanh-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.ban-nhanh-form input,
+.ban-nhanh-form select,
+.ban-nhanh-form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.btn-bannhanh {
+
+  width: 100%;
+  background-color: #fbbf24;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 1.1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-bannhanh:hover {
+  background-color: #f59e0b;
+}
+
+
   
   
   /* Thiết lập cho giao diện di động */

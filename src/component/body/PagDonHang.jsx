@@ -4,7 +4,7 @@ import ItemDonHang from "./ItemDonHang";
 import { useSelector, useDispatch } from "react-redux";
 import { FaChevronLeft , FaChevronRight } from "react-icons/fa";
 import { setDetailDonHang } from "../../redux/slice/orderSlice";
-import { setPageDetailDonHang } from "../../redux/slice/pageSlice";
+import { setPage} from "../../redux/slice/pageSlice";
 import { FaSpinner } from "react-icons/fa";
 
 export default function PageDonHang() {
@@ -127,7 +127,7 @@ export default function PageDonHang() {
             order={order}
             onClick={() => {
               dispatch(setDetailDonHang({ order, fromPage: "pageDonHang" }));
-              dispatch(setPageDetailDonHang());
+              dispatch(setPage("pageDetailDonHang"));
             }}
           />
         ))

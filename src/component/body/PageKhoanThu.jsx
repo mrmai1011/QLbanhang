@@ -1,5 +1,5 @@
 import { useDispatch , useSelector } from "react-redux";
-import { setPageThuChi } from "../../redux/slice/pageSlice";
+import { setPage} from "../../redux/slice/pageSlice";
 import { useState , useEffect} from "react";
 import { useFormattedAmount } from "../../utils/useFormattedAmount";
 import { supabase } from "../../supabaseClient";
@@ -49,7 +49,7 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
   const handleBackThuChi = () => {
     setExitAnimation(true);
     setTimeout(() => {
-      dispatch(setPageThuChi());
+      dispatch(setPage("pageThuChi"));
       setExitAnimation(false);
     }, 200);
   };
@@ -76,7 +76,7 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
     } else {
    
       notify("Lưu thành công!", "success");
-      dispatch(setPageThuChi());
+      dispatch(setPage("pageThuChi"));
     }
   };
 
@@ -98,7 +98,7 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
     } else {
     
       notify("Cập nhật thành công!", "success");
-      dispatch(setPageThuChi());
+      dispatch(setPage("pageThuChi"));
     }
   };
 
@@ -124,7 +124,7 @@ export default function TaoKhoanThu({ sourceType = "thu", detail = null }) {
     } else {
  
       notify("Xóa thành công!", "success");
-      dispatch(setPageThuChi());
+      dispatch(setPage("pageThuChi"));
     }
   };
 

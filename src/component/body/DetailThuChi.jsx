@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { FaArrowLeft } from "react-icons/fa";
-import { setPageThuChi } from "../../redux/slice/pageSlice";
+import { setPage } from "../../redux/slice/pageSlice";
 import { supabase } from "../../supabaseClient"; // nếu bạn dùng Supabase
 import { useState } from "react";
 import { useNotifier } from "../../utils/notifier";
@@ -22,7 +22,7 @@ export default function DetailThuChi() {
     return (
       <div style={{ padding: 16, textAlign: "center" }}>
         <p>Không có dữ liệu chi tiết.</p>
-        <button onClick={() => dispatch(setPageThuChi())}>Quay lại</button>
+        <button onClick={() => dispatch(setPage("pageThuChi"))}>Quay lại</button>
       </div>
     );
   }
@@ -53,7 +53,7 @@ export default function DetailThuChi() {
   } else {
   
     notify("Xóa thành công!", "success");
-    dispatch(setPageThuChi());
+    dispatch(setPage("pageThuChi"));
   }
 };
 const handleUpdate = async () => {
@@ -79,7 +79,7 @@ const handleUpdate = async () => {
     } else {
      
       notify("Cập nhật thành công!", "success");
-      dispatch(setPageThuChi());
+      dispatch(setPage("pageThuChi"));
     }
   };
  return (
@@ -94,7 +94,7 @@ const handleUpdate = async () => {
           cursor: "pointer",
           fontSize: 16
         }}
-        onClick={() => dispatch(setPageThuChi())}
+        onClick={() => dispatch(setPage("pageThuChi"))}
       >
         <FaArrowLeft style={{ marginRight: 8 }} />
         Quay lại

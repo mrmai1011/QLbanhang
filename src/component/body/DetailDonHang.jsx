@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { supabase } from "../../supabaseClient";
 
 import { setDetailDonHang, clearDetailDonHang } from "../../redux/slice/orderSlice";
-import { setPageDonHang , setPageSoNo} from "../../redux/slice/pageSlice";
+import { setPage} from "../../redux/slice/pageSlice";
 import { useNotifier } from "../../utils/notifier";
 import mrmai from "../../assets/mrmai.png";
 
@@ -63,9 +63,9 @@ export default function DetailDonHang() {
 
         notify("Thanh toán thành công!", "success");
         if (fromPage === "pageDonHang"){
-           dispatch(setPageDonHang());
+          dispatch(setPage("pageDonHang"));
         } else if (fromPage === "pageSoNo"){
-           dispatch(setPageSoNo());
+           dispatch(setPage("pageSoNo"));
         }
          
         dispatch(clearDetailDonHang());
@@ -79,9 +79,9 @@ export default function DetailDonHang() {
   };
   const handleBack = () =>{
      if (fromPage === "pageDonHang"){
-           dispatch(setPageDonHang());
+           dispatch(setPage("pageDonHang"));
         } else if (fromPage === "pageSoNo"){
-           dispatch(setPageSoNo());
+           dispatch(setPage("pageSoNo"));
         }
   }
 

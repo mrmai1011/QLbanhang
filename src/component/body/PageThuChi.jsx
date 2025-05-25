@@ -3,7 +3,7 @@ import ItemThuChi from "./itemThuChi";
 import { supabase } from "../../supabaseClient";
 import { useSelector , useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { setPageKhoanThu ,setPageKhoanChi,setPageDetailThuChi} from "../../redux/slice/pageSlice";
+import { setPage} from "../../redux/slice/pageSlice";
 import { FaChevronLeft , FaChevronRight } from "react-icons/fa";
 import { setDetailThuChi } from "../../redux/slice/orderSlice";
 
@@ -32,10 +32,10 @@ export default function PageThuChi() {
   );
 
   const handleOpenTaoChi =  () =>{
-    dispatch(setPageKhoanChi())
+    dispatch(setPage("pageKhoanChi"));
 }
   const handleOpenTaoThu =  () =>{
-        dispatch(setPageKhoanThu())
+    dispatch(setPage("pageKhoanThu"));
   }
 
   const fetchAllIncomeByStore = async (storeId) => {
@@ -228,7 +228,7 @@ function applyAdditionalFilters(data, payment, transaction, newType) {
                 return <ItemThuChi key={index} Icon={Icon} orders={order}
                   onClick={() => {
                     dispatch(setDetailThuChi( order));
-                    dispatch(setPageDetailThuChi());
+                    dispatch(setPage("pageDetailThuChi"));
                   }}
                  />;
               })}

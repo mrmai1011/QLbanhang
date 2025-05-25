@@ -5,12 +5,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { useDispatch , useSelector} from "react-redux";
 import { MdSell } from "react-icons/md";
 import {
-    setPageQuanLi,
-    setPageDonHang,
-    setPageBanHang,
-    setPageThuChi,
-    setPageSoNo,
-    setPageThem
+    setPage
   } from "../redux/slice/pageSlice";
 
 export default function Footer(){
@@ -22,27 +17,27 @@ export default function Footer(){
     return(
         <div className="footer non-printable ">
           
-      <i onClick={() => dispatch(setPageQuanLi())} style={{ color: currentPage === "pageQuanLi" ? activeColor : defaultColor }}>
+      <i onClick={() => dispatch(setPage("pageQuanLi"))} style={{ color: currentPage === "pageQuanLi" ? activeColor : defaultColor }}>
         <FaStore  />
         <h3>Quản lý</h3>
       </i>
 
-      <i onClick={() => dispatch(setPageBanHang())} style={{ color: currentPage === "pageBanHang" ? activeColor : defaultColor }}>
+      <i onClick={() => dispatch(setPage("pageBanHang"))} style={{ color: currentPage === "pageBanHang" ? activeColor : defaultColor }}>
         <MdSell />
         <h3>Bán hàng</h3>
       </i>
 
-      <i onClick={() => dispatch(setPageThuChi())} style={{ color: currentPage === "pageThuChi" ? activeColor : defaultColor }}>
+      <i onClick={() => dispatch(setPage("pageThuChi"))} style={{ color: currentPage === "pageThuChi" ? activeColor : defaultColor }}>
         <LuArrowRightLeft />
         <h3>Thu chi</h3>
       </i>
 
-      <i onClick={() => dispatch(setPageSoNo())} style={{ color: currentPage === "pageSoNo" ? activeColor : defaultColor }}>
+      <i onClick={() => dispatch(setPage("pageSoNo"))} style={{ color: currentPage === "pageSoNo" ? activeColor : defaultColor }}>
         <FaBook />
         <h3>Sổ nợ</h3>
       </i>
 
-      <i onClick={() => dispatch(setPageThem())} style={{ color: currentPage === "pageThem" ? activeColor : defaultColor }}>
+      <i onClick={() => dispatch(setPage("pageThem"))} style={{ color: currentPage === "pageThem" ? activeColor : defaultColor }}>
         <BsThreeDots />
         <h3>Thêm</h3>
       </i>

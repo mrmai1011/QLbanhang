@@ -13,7 +13,7 @@ import logo from "../assets/logo.png"
 import AddProduct from "./body/AddProduct";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { setPageAddProduct , setPageDonHang,setPageThanhToan , setPageSoNo ,setPageBanHang, setPageThuChi, setPageProduct , setPageReport} from "../redux/slice/pageSlice";
+import { setPage } from "../redux/slice/pageSlice";
 import { useDispatch , useSelector} from "react-redux";
 import { addToOrder,decreaseItem,selectTotalItem,selectTotalPrice } from "../redux/slice/orderSlice";
 import PageThanhToan from "./body/PageThanhToan";
@@ -27,6 +27,7 @@ import PageProduct from "./body/PageProduct";
 import PageReport from "./body/PageReport";
 
 import { NotifierContainer } from "../utils/notifier";
+import PageBanNhanh from "./body/pageBanNhanh";
 
 export default function Body()
 {
@@ -95,14 +96,14 @@ export default function Body()
     const handleBack = () => {
         setExitAnimation(true); // kích hoạt animation rút ra
         setTimeout(() => {
-          dispatch(setPageBanHang())
+          dispatch(setPage("pageBanHang"));
           setExitAnimation(false);
         }, 200); // khớp với thời gian animation
     };
       const handleBackProduct = () => {
         setExitAnimation(true); // kích hoạt animation rút ra
         setTimeout(() => {
-          dispatch(setPageProduct())
+          dispatch(setPage("pageProduct"));
           setExitAnimation(false);
         }, 200); // khớp với thời gian animation
     };
@@ -111,26 +112,7 @@ export default function Body()
         dispatch(addToOrder(order))
         console.log(items)
       }
-      const handleOpenPage = (name) =>{
-        switch(name)
-        {
-          case "pageDonHang" :
-            dispatch(setPageDonHang())
-            break
-          case "pageBanHang" :
-          dispatch(setPageBanHang())
-          break
-           case "pageThuChi" :
-          dispatch(setPageThuChi())
-          break
-              case "pageProduct" :
-          dispatch(setPageProduct())
-          break
-          case "pageReport" :
-          dispatch(setPageReport())
-          break
-        }
-      }
+  
     
    
     return(
@@ -138,23 +120,23 @@ export default function Body()
           {/*   main quản lý */}
           {currentPage === "pageQuanLi" &&
             <div className="b-quanly">
-                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageBanHang")}>
+                <div className="b-quanly-item" onClick={()=>dispatch(setPage("pageBanHang"))}>
                     <i className="color-red"><MdSell/></i>
                     <h3>Bán hàng</h3>
                 </div>
-                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageDonHang")} >
+                <div className="b-quanly-item" onClick={()=>dispatch(setPage("pageDonHang"))} >
                     <i className="color-blue"><LuNotepadText/></i>
                     <h3>Đơn hàng</h3>
                 </div>
-                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageProduct")}>
+                <div className="b-quanly-item" onClick={()=>dispatch(setPage("pageProduct"))}>
                     <i className="color-orange"><FaBoxArchive/></i>
                     <h3>Sản phẩm</h3>
                 </div>
-                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageReport")}>
+                <div className="b-quanly-item" onClick={()=>dispatch(setPage("pageReport"))}>
                     <i className="color-green"><FaChartLine/></i>
                     <h3>Báo cáo</h3>
                 </div>
-                <div className="b-quanly-item" onClick={()=>handleOpenPage("pageThuChi")}>
+                <div className="b-quanly-item" onClick={()=>dispatch(setPage("pageThuChi"))}>
                     <i className="color-puble"><LuArrowRightLeft/></i>
                     <h3>Thu chi</h3>
                 </div>
@@ -180,7 +162,7 @@ export default function Body()
           
             <div className="b-donhang-wapper">
               
-                <div className="b-donhang-bannhanh">
+                <div className="b-donhang-bannhanh" onClick={()=>dispatch(setPage("pageBanNhanh"))}>
                     <i><AiFillThunderbolt/></i>
                     <h3>Bán nhanh</h3>
                 </div>
@@ -229,7 +211,7 @@ export default function Body()
 
              
                 <div className="b-donhang-them"
-                 onClick={() => dispatch(setPageAddProduct())}
+                 onClick={() => dispatch(setPage("pageAddProduct"))}
                 >
                     <i><IoMdAdd/></i>
                     <h3>Thêm sp</h3>
@@ -249,7 +231,7 @@ export default function Body()
             </div>
           )}
          {total > 0 && currentPage === "pageBanHang" && (
-              <button className="btn-thanhtoan" onClick={() => dispatch(setPageThanhToan())}>
+              <button className="btn-thanhtoan" onClick={() => dispatch(setPage("pageThanhToan"))}> 
               <div className="btn-left">
                <i><BsBagFill/></i> <span>{totalItem}</span>
               </div>
@@ -282,6 +264,8 @@ export default function Body()
               {currentPage === "pageDetailThuChi" && <TaoKhoanThu sourceType={detailThuChi.source} detail={detailThuChi}/>}
               {/* page report */}
               {currentPage === "pageReport" && <PageReport storeId={storeId}/>}
+              {/*  page bán nhanh */}
+              {currentPage === "pageBanNhanh" && <PageBanNhanh />}
             <NotifierContainer/>
         </div>
          
