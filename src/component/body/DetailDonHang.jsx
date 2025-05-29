@@ -40,7 +40,7 @@ export default function DetailDonHang() {
             {
               id_store: storeId,
               amount: order.debt, 
-              guest: `Thu nợ ${order.id_bill.slice(0,8)}`,
+              guest: `Thu nợ ${order.note}`,
               payment_method:paymentMethod,
               created_at: ngayThanhToan,
               source: "thu",
