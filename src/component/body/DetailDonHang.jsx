@@ -55,7 +55,7 @@ export default function DetailDonHang() {
           if (orderError) notify("Lỗi cập nhật đơn hàng:!", "error"); 
           if (incomeError) notify("Lỗi ghi nhận giao dịch:!", "error"); 
         
-          notify("Thanh toán thất bại! Vui lòng thử lại.", "error");
+          notify("Thanh toán thất bại! Vui lòng thử lại sau", "error");
           return; // ❌ Dừng luôn nếu 1 trong 2 lỗi
         }
 
