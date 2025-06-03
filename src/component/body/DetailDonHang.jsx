@@ -52,9 +52,8 @@ export default function DetailDonHang() {
         const { error: incomeError } = incomeResult;
 
         if (orderError || incomeError) {
-          if (orderError) console.error("Lỗi cập nhật đơn hàng:", orderError);
-          if (incomeError) console.error("Lỗi ghi nhận giao dịch:", incomeError);
-
+          if (orderError) notify("Lỗi cập nhật đơn hàng:!", "error"); 
+          if (incomeError) notify("Lỗi ghi nhận giao dịch:!", "error"); 
         
           notify("Thanh toán thất bại! Vui lòng thử lại.", "error");
           return; // ❌ Dừng luôn nếu 1 trong 2 lỗi
