@@ -7,7 +7,7 @@ export default function ItemDonHang({ order , onClick}) {
   };
 
   const paymentColor = order.debt > 0 ? "rgb(184, 64, 13)" : "green";
-  console.log(order.items);
+  /* console.log(order.items); */
   return (
     <div className="item-donhang"  onClick={onClick}>
       <div className="item-donhang-name">

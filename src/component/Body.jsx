@@ -110,7 +110,7 @@ export default function Body()
 
       const handleAddOder = (order) =>{
         dispatch(addToOrder(order))
-        console.log(items)
+        /* console.log(items) */
       }
   
     

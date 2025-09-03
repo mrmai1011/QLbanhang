@@ -40,7 +40,7 @@ export default function PageThanhToan() {
   };
 
   const handleThanhToan = async () => {
-    console.log("prepaid", amount)
+   /*  console.log("prepaid", amount) */
     const actualPrepaid = amount === 0 || amount == null ? total : amount;
     const debt = total - actualPrepaid;
     const donHang = {

@@ -52,7 +52,7 @@ function LoginForm() {
     };
 
     dispatch(loginSuccess(payload));
-    console.log("Đăng nhập thành công", payload);
+  /*   console.log("Đăng nhập thành công", payload); */
     localStorage.setItem("auth", JSON.stringify(payload));
   };
 

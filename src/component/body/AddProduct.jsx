@@ -188,7 +188,7 @@ export default function AddProduct({ product = null, onBack, exit }) {
         if (error) throw error;
       
          notify("Đã thêm sản phẩm!");
-         console.log("Thêm sản phẩm thành công");
+       /*   console.log("Thêm sản phẩm thành công"); */
       }
 
       onBack();
