@@ -7,11 +7,11 @@ export default function ItemDonHang({ order , onClick}) {
   };
 
   const paymentColor = order.debt > 0 ? "rgb(184, 64, 13)" : "green";
-
+  console.log(order.items);
   return (
     <div className="item-donhang"  onClick={onClick}>
       <div className="item-donhang-name">
-        <p>{order.name || "(Không tên)"}</p>
+        <p>{order.payment_method || "(Không tên)"} - {order.items[0].name}</p>
         <p style={{ color: "green" }}>
           {order.status || "Đã giao"}
         </p>
